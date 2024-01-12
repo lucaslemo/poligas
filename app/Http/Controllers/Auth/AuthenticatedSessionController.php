@@ -26,9 +26,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $user = User::where('username', $request->username)->first();
-        if ($user && !$user->user_status) {
-            return back()->withErrors(['username' => 'Sua conta está inativa.']);
+        $user = User::where('email', $request->login)
+            ->orWhere('username', $request->login)
+            ->first();
+        if ($user && !$user->status) {
+            return back()->withErrors(['login' => 'Sua conta está inativa.']);
         }
 
         $request->authenticate();

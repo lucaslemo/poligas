@@ -4,7 +4,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>{{ $title ?? 'Poligás' }}</title>
+        <title>{{ $title ?? config('app.name') }}</title>
+
+        <!-- Icon -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+        <link rel="manifest" href="/site.webmanifest">
 
         <!-- Fonts -->
         <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -13,6 +19,7 @@
 
         <!-- Styles -->
         @vite('resources/css/app.css')
+        @stack('styles')
 
         {{-- =======================================================
         * Template Name: NiceAdmin - v2.2.2
@@ -28,17 +35,15 @@
 
     <!-- Javasript -->
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-    <script src="{{ asset('build/assets/apexcharts.min.js') }}"></script>
-    <script src="{{ asset('build/assets/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('build/assets/chart.min.js') }}"></script>
-    <script src="{{ asset('build/assets/echarts.min.js') }}"></script>
-    <script src="{{ asset('build/assets/quill.min.js') }}"></script>
-    <script src="{{ asset('build/assets/simple-datatables.js') }}"></script>
-    <script src="{{ asset('build/assets/tinymce.min.js') }}"></script>
-    <script src="{{ asset('build/assets/validate.js') }}"></script>
-    <script src="{{ asset('build/assets/main.js') }}"></script>
-    @isset($scripts)
-        {{ $scripts }}
-    @endisset
+    <script src="{{ asset('build/assets/apexcharts.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/bootstrap.bundle.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/chart.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/echarts.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/quill.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/simple-datatables.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/tinymce.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/validate.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/main.js') }}" type="text/javascript"></script>
+    @stack('scripts')
 
 </html>

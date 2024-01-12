@@ -1,10 +1,10 @@
 <x-layout>
     <x-slot:title>
-        Poligás - Recuperar Senha
+        {{ config('app.name') }} - Recuperar Senha
     </x-slot>
+
     <main>
         <div class="container">
-
             <section
                 class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
                 <div class="container">
@@ -14,9 +14,9 @@
                             <div class="d-flex justify-content-center py-4">
                                 <a href="index.html" class="logo d-flex align-items-center w-auto">
                                     <img src="{{ Vite::asset('resources/assets/img/logos/MARCA_DAGUA_2.png') }}"
-                                        alt="Logo Poligas" style="max-height: 80px;">
+                                        alt="{{ config('app.name') }}" style="max-height: 80px;">
                                 </a>
-                            </div><!-- End Logo -->
+                            </div>
 
                             <div class="card mb-3">
 
@@ -27,25 +27,12 @@
                                         <p class="text-center small">Você receberá um e-mail para redefini-la</p>
                                     </div>
 
-                                    <form action="{{ route('password.email') }}" class="row g-3 needs-validation"
-                                        method="POST" accept-charset="utf-8" autocomplete="on"
+                                    <form id="forgotPasswordForm" action="{{ route('password.email') }}"
+                                        class="row g-3" method="POST" accept-charset="utf-8"
                                         enctype="multipart/form-data">
-                                        @if ($errors->any())
-                                            @foreach ($errors->all() as $error)
-                                                <div class="alert alert-warning alert-dismissible fade show"
-                                                    role="alert">
-                                                    {{ $error }}
-                                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                            @endforeach
-                                        @endif
-                                        @if (session('status'))
-                                            <div class="alert alert-success" role="alert">
-                                                {{ session('status') }}
-                                            </div>
-                                        @endif
                                         @csrf
+
+                                        <x-alerts.messages />
 
                                         <div class="col-12">
                                             <label for="email" class="form-label">E-mail</label>
@@ -54,11 +41,16 @@
                                         </div>
 
                                         <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">Enviar E-mail</button>
+                                            <x-forms.button-with-spinner id="forgotPassword" type="submit"
+                                                class="btn btn-primary w-100" formId="forgotPasswordForm">
+                                                Enviar E-mail
+                                            </x-forms.button-with-spinner>
                                         </div>
                                         <div class="col-12">
-                                            <p class="small mb-0">Já possui uma conta? <a
-                                                    href="{{ route('login') }}">Entrar</a></p>
+                                            <p class="small mb-0">
+                                                Já possui uma conta?
+                                                <a href="{{ route('login') }}">Entrar</a>
+                                            </p>
                                         </div>
                                     </form>
 
@@ -67,9 +59,8 @@
                         </div>
                     </div>
                 </div>
-
             </section>
-
         </div>
-    </main><!-- End #main -->
+    </main>
+
 </x-layout>

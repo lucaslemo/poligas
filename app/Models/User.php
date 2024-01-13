@@ -47,4 +47,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function fullName(): string
+    {
+        return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
+    }
+
+    public function shortName(): string
+    {
+        return mb_substr($this->first_name, 0, 1) . '. ' . ucfirst($this->last_name);
+    }
+
 }

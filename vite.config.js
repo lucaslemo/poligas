@@ -59,6 +59,10 @@ export default defineConfig({
                 {
                     src: 'resources/assets/js/main.js',
                     dest: 'assets'
+                },
+                {
+                    src: 'resources/assets/js/helpers.js',
+                    dest: 'assets'
                 }
             ]
         })

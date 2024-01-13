@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ $title ?? config('app.name') }}</title>
 
@@ -44,6 +45,7 @@
     <script src="{{ asset('build/assets/tinymce.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/validate.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/main.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/helpers.js') }}" type="text/javascript"></script>
     @stack('scripts')
 
 </html>

@@ -1,14 +1,14 @@
 <x-app>
     <x-slot:title>
-        {{ config('app.name') }} - Usuários
+        {{ config('app.name') }} - Permissões
     </x-slot>
     <main id="main" class="main">
         <div class="row d-flex justify-content-start mb-3">
             <div class="col-md-auto pagetitle align-self-center mb-0 py-3">
-                <h1>Usuários</h1>
+                <h1>Permissões</h1>
                 <nav>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item">Usuários</li>
+                        <li class="breadcrumb-item">Permissões</li>
                         <li class="breadcrumb-item active">Listar</li>
                     </ol>
                 </nav>
@@ -20,18 +20,16 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Usuários</h5>
-                            <p>Lista dos usuários cadastrados no sistema</p>
+                            <h5 class="card-title">Permissões</h5>
+                            <p>Lista das permissões cadastradas no sistema</p>
 
-                            <table id="usersDataTable" class="table table-sm">
+                            <table id="permissionsDataTable" class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Nome completo</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Tipo</th>
+                                        <th scope="col">Permissão</th>
+                                        <th scope="col">Grupo</th>
                                         <th scope="col">Registro</th>
-                                        <th scope="col">Ação</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -47,34 +45,27 @@
     @push('scripts')
         <script type="text/javascript">
             $(document).ready(function() {
-                const routeUsersDataTable = "{{ route('users.load') }}";
-                const tableUsers = $('#usersDataTable').DataTable({
+                const routePermissionsDataTable = "{{ route('permissions.load') }}";
+                const tablePermissions = $('#permissionsDataTable').DataTable({
                     searching: true,
                     responsive: true,
                     "pageLength": 10,
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        url: routeUsersDataTable,
+                        url: routePermissionsDataTable,
                     },
                     "columns": [{
                             data: 'id',
                             name: 'id'
                         },
                         {
-                            data: 'full_name',
-                            name: 'full_name',
-                            render: function(data, type, full, meta) {
-                                return `<a href="${full.routeEdit}">${data}</a>`;
-                            }
+                            data: 'name',
+                            name: 'name',
                         },
                         {
-                            data: 'email',
-                            name: 'email',
-                        },
-                        {
-                            data: 'type',
-                            name: 'type'
+                            data: 'group',
+                            name: 'group',
                         },
                         {
                             data: 'created_at',
@@ -91,12 +82,6 @@
                                 return `<small class="text-secondary">registrado em: <span class="fw-bold">${formatted_date}</span></small>`;
                             }
                         },
-                        {
-                            data: 'statusButton',
-                            name: 'statusButton',
-                            orderable: false,
-                            width: '1%'
-                        },
                     ],
                     "language": {
                         "paginate": {
@@ -104,47 +89,15 @@
                             "previous": "Anterior"
                         },
                         "search": "Buscar",
-                        "info": "Mostrando de _START_ a _END_ de _TOTAL_ usuários",
+                        "info": "Mostrando de _START_ a _END_ de _TOTAL_ permissões",
                         "infoEmpty": "Não há registros disponíveis",
-                        "infoFiltered": "(Filtrados de _MAX_ usuários)",
-                        "lengthMenu": "Mostrar _MENU_ usuários",
+                        "infoFiltered": "(Filtrados de _MAX_ permissões)",
+                        "lengthMenu": "Mostrar _MENU_ permissões",
                         "infoThousands": ".",
                         "emptyTable": "Nenhum registro encontrado",
                         "zeroRecords": "Nenhum registro correspondente encontrado",
                         "loadingRecords": "Carregando...",
                     },
-                });
-
-                $(document).on('click', '.btn_activate', function() {
-                    const id = $(this).data('id');
-                    const route = "{{ route('users.activate', ':id') }}".replace(':id', id);
-                    $.ajax({
-                        url: route,
-                        method: 'PUT',
-                        dataType: 'json',
-                        success: function(response) {
-                            tableUsers.ajax.reload(null, false);
-                        },
-                        error: function(xhr, status, error) {
-                            alert(xhr.responseJSON.error);
-                        }
-                    });
-                });
-
-                $(document).on('click', '.btn_deactivate', function() {
-                    const id = $(this).data('id');
-                    const route = "{{ route('users.deactivate', ':id') }}".replace(':id', id);
-                    $.ajax({
-                        url: route,
-                        method: 'PUT',
-                        dataType: 'json',
-                        success: function(response) {
-                            tableUsers.ajax.reload(null, false);
-                        },
-                        error: function(xhr, status, error) {
-                            alert(xhr.responseJSON.error);
-                        }
-                    });
                 });
             });
         </script>

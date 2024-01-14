@@ -7,9 +7,11 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -68,6 +70,8 @@ class UserController extends Controller
             $user->password = Hash::make(Str::random());
             $user->save();
 
+            $user->assignRole($user->type);
+
             DB::commit();
             return Redirect::route('users.create')->with('status', 'Usuário cadastrado com sucesso.');
         } catch (\Throwable $th) {
@@ -96,6 +100,8 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             $user->fill($request->validated());
             $user->save();
+
+            $user->syncRoles($user->type);
 
             DB::commit();
             return Redirect::route('users.edit', $id)->with('status', 'Usuário atualizado com sucesso.');
@@ -134,6 +140,11 @@ class UserController extends Controller
             try {
                 DB::beginTransaction();
                 $user = User::find($id);
+
+                if ($user->hasRole('Administrador')) {
+                    throw new \Exception('Essa ação não pode ser realizada.');
+                }
+
                 $user->status = false;
                 $user->save();
                 DB::commit();

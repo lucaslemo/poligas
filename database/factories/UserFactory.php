@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -10,6 +11,28 @@ use Illuminate\Support\Str;
  */
 class UserFactory extends Factory
 {
+
+    /**
+     * @param array|\Spatie\Permission\Contracts\Role|string  ...$roles
+     * @return UserFactory
+     */
+    private function assignRole(...$roles): UserFactory
+    {
+        return $this->afterCreating(fn(User $user) => $user->syncRoles($roles));
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (User $user) {
+            return $user->assignRole($user->type);
+        });
+    }
+
     /**
      * Define the model's default state.
      *
@@ -20,8 +43,9 @@ class UserFactory extends Factory
         return [
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
-            'username' => fake()->word(),
+            'username' => fake()->unique()->word(),
             'email' => fake()->unique()->safeEmail(),
+            'type' => fake()->randomElement(['Gerente', 'Entregador']),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),

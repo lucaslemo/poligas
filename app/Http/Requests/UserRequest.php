@@ -33,6 +33,7 @@ class UserRequest extends FormRequest
             'username' => [$requiredOrNullable, 'string', 'max:255', Rule::unique(User::class)->ignore($id)],
             'email' => [$requiredOrNullable, 'email', 'max:255', Rule::unique(User::class)->ignore($id)],
             'status' => [$requiredOrNullable, 'boolean'],
+            'type' => ['required', 'string', Rule::in(['Administrador', 'Gerente', 'Entregador'])],
         ];
     }
 }

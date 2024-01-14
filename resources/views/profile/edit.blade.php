@@ -33,7 +33,7 @@
                                     class="rounded-circle">
                             @endif
                             <h2>{{ $user->fullname() }}</h2>
-                            <h3>{{ 'Administrador' }}</h3>
+                            <h3>{{ $user->type }}</h3>
                         </div>
                     </div>
 
@@ -75,13 +75,13 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-lg-3 col-md-4 label">Email</div>
-                                        <div class="col-lg-9 col-md-8">{{ $user->email }}</div>
+                                        <div class="col-lg-3 col-md-4 label">Tipo</div>
+                                        <div class="col-lg-9 col-md-8">{{ $user->type }}</div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-lg-3 col-md-4 label">Tipo</div>
-                                        <div class="col-lg-9 col-md-8">{{ 'Administrador' }}</div>
+                                        <div class="col-lg-3 col-md-4 label">Email</div>
+                                        <div class="col-lg-9 col-md-8">{{ $user->email }}</div>
                                     </div>
 
                                 </div>

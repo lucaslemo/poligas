@@ -47,6 +47,32 @@
                                         </small>
                                     </div>
                                 </div>
+                                <fieldset class="row mb-3">
+                                    <legend class="col-form-label col-sm-2 pt-0">Tipo</legend>
+                                    <div class="col-sm-10">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="type"
+                                                id="typeInput1" value="Administrador" {{ $user->type == 'Administrador' ? 'checked' : ''}}>
+                                            <label class="form-check-label" for="typeInput1">
+                                                Administrador
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="type"
+                                                id="typeInput2" value="Gerente" {{ $user->type == 'Gerente' ? 'checked' : ''}}>
+                                            <label class="form-check-label" for="typeInput2">
+                                                Gerente
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="type"
+                                                id="typeInput3" value="Entregador" {{ $user->type == 'Entregador' ? 'checked' : ''}}>
+                                            <label class="form-check-label" for="typeInput3">
+                                                Entregador
+                                            </label>
+                                        </div>
+                                    </div>
+                                </fieldset>
                                 <div class="text-center">
                                     <x-forms.button-with-spinner id="createUser" type="submit"
                                         class="btn btn-primary w-20" formId="createUserForm">

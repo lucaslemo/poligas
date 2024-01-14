@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -47,8 +48,32 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'status' => 'boolean',
         'password' => 'hashed',
     ];
+
+
+    /**
+     * Interact with the user's first name.
+     */
+    protected function firstName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => ucfirst($value),
+            set: fn (string $value) => strtolower($value),
+        );
+    }
+
+    /**
+     * Interact with the user's last name.
+     */
+    protected function lastName(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => ucfirst($value),
+            set: fn (string $value) => strtolower($value),
+        );
+    }
 
     /**
      * Log all attributes on the model
@@ -61,12 +86,12 @@ class User extends Authenticatable
 
     public function fullName(): string
     {
-        return ucfirst($this->first_name) . ' ' . ucfirst($this->last_name);
+        return $this->first_name . ' ' . $this->last_name;
     }
 
     public function shortName(): string
     {
-        return mb_substr($this->first_name, 0, 1) . '. ' . ucfirst($this->last_name);
+        return mb_substr($this->first_name, 0, 1) . '. ' . $this->last_name;
     }
 
 }

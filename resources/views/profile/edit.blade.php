@@ -70,6 +70,11 @@
                                     </div>
 
                                     <div class="row">
+                                        <div class="col-lg-3 col-md-4 label ">Usuário</div>
+                                        <div class="col-lg-9 col-md-8">{{ $user->username }}</div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-lg-3 col-md-4 label">Email</div>
                                         <div class="col-lg-9 col-md-8">{{ $user->email }}</div>
                                     </div>
@@ -130,12 +135,22 @@
                                         </div>
 
                                         <div class="row mb-3">
-                                            <label for="lastname" class="col-md-4 col-lg-3 col-form-label">
+                                            <label for="lastName" class="col-md-4 col-lg-3 col-form-label">
                                                 Sobrenome
                                             </label>
                                             <div class="col-md-8 col-lg-9">
                                                 <input name="last_name" type="text" class="form-control"
-                                                    id="lastname" value="{{ $user->last_name }}" required>
+                                                    id="lastName" value="{{ $user->last_name }}" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="username" class="col-md-4 col-lg-3 col-form-label">
+                                                Usuário
+                                            </label>
+                                            <div class="col-md-8 col-lg-9">
+                                                <input name="username" type="text" class="form-control"
+                                                    id="username" value="{{ $user->username }}" required>
                                             </div>
                                         </div>
 

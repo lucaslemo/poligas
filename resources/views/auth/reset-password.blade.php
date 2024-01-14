@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>
-        {{ config('app.name') }} - Recuperar Senha
+        {{ config('app.name') }} - Resetar Senha
     </x-slot>
     <main>
         <div class="container">

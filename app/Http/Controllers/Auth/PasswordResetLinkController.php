@@ -32,7 +32,7 @@ class PasswordResetLinkController extends Controller
 
         $user = User::where('email', $request->email)->first();
         if ($user && !$user->status) {
-            return back()->withErrors(['username' => 'Sua conta está inativa.']);
+            return back()->withErrors(['email' => 'Sua conta está inativa.']);
         }
 
         // We will send the password reset link to this user. Once we have attempted

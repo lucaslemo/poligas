@@ -45,7 +45,7 @@ export default defineConfig({
                     dest: 'assets'
                 },
                 {
-                    src: 'resources/assets/vendor/simple-datatables/simple-datatables.js',
+                    src: 'resources/assets/vendor/datatable/datatables.min.js',
                     dest: 'assets'
                 },
                 {

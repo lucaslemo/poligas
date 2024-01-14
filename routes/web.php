@@ -17,10 +17,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('dashboard/index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
+    // User
+    Route::get('/users/load', [UserController::class, 'loadDataTable'])->name('users.load');
+    Route::put('users/{id}/activate', [UserController::class, 'activateUser'])->name('users.activate');
+    Route::put('users/{id}/deactivate', [UserController::class, 'deactivateUser'])->name('users.deactivate');
     Route::resource('/users', UserController::class)->except(['show', 'destroy']);
+
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });

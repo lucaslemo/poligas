@@ -29,6 +29,7 @@
                                         <th scope="col">#</th>
                                         <th scope="col">Permissão</th>
                                         <th scope="col">Grupo</th>
+                                        <th scope="col">Tipo de Usuário</th>
                                         <th scope="col">Registro</th>
                                     </tr>
                                 </thead>
@@ -66,6 +67,13 @@
                         {
                             data: 'group',
                             name: 'group',
+                        },
+                        {
+                            data: 'roles',
+                            name: 'roles',
+                            render: function(data, type, full, meta) {
+                                return data != '' ? data : '-';
+                            }
                         },
                         {
                             data: 'created_at',

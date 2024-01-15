@@ -15,8 +15,16 @@ class PermissionController extends Controller
     public function loadDataTable(Request $request)
     {
         if ($request->ajax()) {
-            $permissions = Permission::select(['*']);
-            return DataTables::of($permissions)->make(true);
+            $permissions = Permission::with('roles')->select(['*'])->get();
+            return DataTables::of($permissions)
+                ->addColumn('roles', function($permission) {
+                    $roles = '';
+                    foreach($permission->roles as $role) {
+                        $roles .= $role->name . ', ';
+                    }
+                    return rtrim($roles, ', ');
+                })
+                ->make(true);
         }
     }
 

@@ -95,4 +95,23 @@ class User extends Authenticatable
         return mb_substr($this->first_name, 0, 1) . '. ' . $this->last_name;
     }
 
+    public function deliveryMen()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'manager_has_delivery_men',
+            'get_manager_user_id',
+            'get_deliveryman_user_id',
+        );
+    }
+
+    public function managers()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'manager_has_delivery_men',
+            'get_deliveryman_user_id',
+            'get_manager_user_id',
+        );
+    }
 }

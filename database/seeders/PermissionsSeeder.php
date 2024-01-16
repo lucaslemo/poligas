@@ -23,7 +23,7 @@ class PermissionsSeeder extends Seeder
         Role::create(['name' => 'Entregador']);
 
         // Usuários
-        $permissionsUsers = ['Cadastrar usuário', 'Ativar/Desativar usuário', 'Editar usuário', 'Listar usuários'];
+        $permissionsUsers = ['Cadastrar usuário', 'Ativar/Desativar usuário', 'Editar usuário', 'Listar usuários', 'Atribuir/Desatribuir usuário'];
         foreach($permissionsUsers as $permissionUser) {
             $permission = Permission::create(['name' =>  $permissionUser, 'group' => 'Usuários']);
             $roleAdmin->givePermissionTo($permission);

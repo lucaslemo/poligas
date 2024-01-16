@@ -27,9 +27,12 @@ Route::group(['middleware' => ['auth', 'role:Administrador']], function () {
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
 
     // User
-    Route::get('/users/load', [UserController::class, 'loadDataTable'])->name('users.load');
+    Route::get('/users/load/{role?}', [UserController::class, 'loadDataTable'])->name('users.load');
+    Route::get('users/getUsers/{role?}', [UserController::class, 'getUsers'])->name('users.getUsers');
     Route::put('users/{id}/activate', [UserController::class, 'activateUser'])->name('users.activate');
     Route::put('users/{id}/deactivate', [UserController::class, 'deactivateUser'])->name('users.deactivate');
+    Route::put('users/{id}/assignDeliveryman', [UserController::class, 'assignDeliveryman'])->name('users.assignDeliveryman');
+    Route::put('users/{id}/unassignDeliveryman', [UserController::class, 'unassignDeliveryman'])->name('users.unassignDeliveryman');
     Route::resource('/users', UserController::class)->except(['show', 'destroy']);
 });
 

@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
-use Spatie\Permission\Exceptions\UnauthorizedException;
+use Illuminate\Support\Facades\Response;
 use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
@@ -19,10 +17,19 @@ class UserController extends Controller
     /**
      * DataTable.
      */
-    public function loadDataTable(Request $request)
+    public function loadDataTable(Request $request, string|null $role = null)
     {
         if ($request->ajax()) {
-            $users = User::select();
+            $id = trim($request->delivery_men_from_manger_id);
+            $users = User::select()
+                ->when($role, function($query) use($role) {
+                    $query->where('type', $role);
+                })
+                ->when($id, function($query) use($id){
+                    $query->whereHas('managers', function($query) use($id){
+                        $query->where('get_manager_user_id', $id);
+                    });
+                });
             return DataTables::eloquent($users)
                 ->addColumn('full_name', function ($user) {
                     return $user->fullname();
@@ -33,11 +40,43 @@ class UserController extends Controller
                 ->addColumn('statusButton', function ($user) {
                     return view('users.partials.statusButton', ['user' => $user]);
                 })
+                ->addColumn('detachButton', function ($user) {
+                    return view('users.partials.detachButton', ['user' => $user]);
+                })
                 ->filterColumn('full_name', function($query, $keyword) {
                     $sql = "CONCAT(users.first_name,'-',users.last_name) like ?";
                     $query->whereRaw($sql, ["%{$keyword}%"]);
                 })
                 ->make(true);
+        }
+    }
+
+    /**
+     * Get records.
+     */
+    public function getUsers(Request $request, string|null $role = null)
+    {
+        if ($request->ajax()) {
+            $term = trim($request->term);
+            $users = User::select('id',  DB::raw("CONCAT(first_name, ' ', last_name) as text"))
+                ->where(function($query) use($term) {
+                    $sql = "CONCAT(users.first_name,'-',users.last_name) like ?";
+                    $query->whereRaw($sql, ["%{$term}%"]);
+                })
+                ->when($role, function($query) use($role) {
+                    $query->where('type', $role);
+                })
+                ->orderBy('first_name', 'asc')
+                ->simplePaginate(10);
+            $morePages = true;
+            if (empty($users->nextPageUrl())) {
+                $morePages = false;
+            }
+            $results = array(
+                "results" => $users->items(),
+                "pagination" => ["more" => $morePages]
+            );
+            return Response::json($results);
         }
     }
 
@@ -102,6 +141,7 @@ class UserController extends Controller
             $user->save();
 
             $user->syncRoles($user->type);
+            $user->deliveryMen()->detach();
 
             DB::commit();
             return Redirect::route('users.edit', $id)->with('status', 'Usuário atualizado com sucesso.');
@@ -119,7 +159,7 @@ class UserController extends Controller
         if($request->ajax()) {
             try {
                 DB::beginTransaction();
-                $user = User::find($id);
+                $user = User::findOrFail($id);
                 $user->status = true;
                 $user->save();
                 DB::commit();
@@ -139,7 +179,7 @@ class UserController extends Controller
         if($request->ajax()) {
             try {
                 DB::beginTransaction();
-                $user = User::find($id);
+                $user = User::findOrFail($id);
 
                 if ($user->hasRole('Administrador')) {
                     throw new \Exception('Essa ação não pode ser realizada.');
@@ -149,6 +189,56 @@ class UserController extends Controller
                 $user->save();
                 DB::commit();
                 return response()->json(['message' => 'Usuário desativado com sucesso.']);
+            } catch (\Throwable $th) {
+                DB::rollback();
+                return response()->json(['error' => $th->getMessage()], 500);
+            }
+        }
+    }
+
+    /**
+     * Update the assign deliveryman.
+     */
+    public function assignDeliveryman(Request $request, string $id)
+    {
+        if($request->ajax()) {
+            try {
+                $request->validate([
+                    'deliveryman_id' => ['required', 'numeric']
+                ]);
+
+                DB::beginTransaction();
+                $user = User::findOrFail($id);
+
+                $user->deliveryMen()->sync($request->deliveryman_id, false);
+
+                DB::commit();
+                return response()->json(['message' => 'Entregador adicionado com sucesso.']);
+            } catch (\Throwable $th) {
+                DB::rollback();
+                return response()->json(['error' => $th->getMessage()], 500);
+            }
+        }
+    }
+
+    /**
+     * Update the assign deliveryman.
+     */
+    public function unassignDeliveryman(Request $request, string $id)
+    {
+        if($request->ajax()) {
+            try {
+                $request->validate([
+                    'deliveryman_id' => ['required', 'numeric']
+                ]);
+
+                DB::beginTransaction();
+                $user = User::findOrFail($id);
+
+                $user->deliveryMen()->detach($request->deliveryman_id);
+
+                DB::commit();
+                return response()->json(['message' => 'Entregador removido com sucesso.']);
             } catch (\Throwable $th) {
                 DB::rollback();
                 return response()->json(['error' => $th->getMessage()], 500);

@@ -5,4 +5,6 @@
 @import "../assets/vendor/quill/quill.bubble.css";
 @import "../assets/vendor/remixicon/remixicon.css";
 @import "../assets/vendor/datatable/datatables.min.css";
+@import "../assets/vendor/select2/select2.min.css";
+@import "../assets/vendor/select2/select2-bootstrap-5-theme.min.css";
 @import "../assets/css/style.css";

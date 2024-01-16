@@ -26,14 +26,14 @@ class UserRequest extends FormRequest
     {
         $id = $this->route('user') ? $this->route('user') : null;
         $requiredOrNullable = $id ? 'nullable' : 'required';
-
+        $superAdminRule = $id == 1 ? Rule::in(['Administrador']) : Rule::in(['Administrador', 'Gerente', 'Entregador']);
         return [
             'first_name' => [$requiredOrNullable, 'string', 'max:255'],
             'last_name' => [$requiredOrNullable, 'string', 'max:255'],
             'username' => [$requiredOrNullable, 'string', 'max:255', Rule::unique(User::class)->ignore($id)],
             'email' => [$requiredOrNullable, 'email', 'max:255', Rule::unique(User::class)->ignore($id)],
             'status' => [$requiredOrNullable, 'boolean'],
-            'type' => ['required', 'string', Rule::in(['Administrador', 'Gerente', 'Entregador'])],
+            'type' => ['required', 'string', $superAdminRule],
         ];
     }
 }

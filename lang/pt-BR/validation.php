@@ -214,6 +214,8 @@ return [
 
         // Custom atributes
         'remember' => 'manter-me conectado',
+        'type' => 'tipo',
+        'deliveryman_id' => 'novo entregador',
     ],
 
 ];

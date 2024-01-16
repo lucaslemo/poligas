@@ -49,6 +49,10 @@ export default defineConfig({
                     dest: 'assets'
                 },
                 {
+                    src: 'resources/assets/vendor/select2/select2.full.min.js',
+                    dest: 'assets'
+                },
+                {
                     src: 'resources/assets/vendor/tinymce/tinymce.min.js',
                     dest: 'assets'
                 },

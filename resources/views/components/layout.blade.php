@@ -42,6 +42,7 @@
     <script src="{{ asset('build/assets/echarts.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/quill.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/datatables.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/select2.full.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/tinymce.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/validate.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/main.js') }}" type="text/javascript"></script>

@@ -22,17 +22,32 @@
                 </li>
             </ul>
         </li>
-
+        @hasanyrole('Administrador|Gerente')
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs(['users.deliveryMen']) ? '' : 'collapsed' }}" data-bs-target="#delivary-men-nav" data-bs-toggle="collapse" href="#">
+                <i class="ri ri-bike-line"></i>
+                <span>Entregadores</span>
+                <i class="bi bi-chevron-down ms-auto"></i>
+            </a>
+            <ul id="delivary-men-nav" class="nav-content collapse {{ request()->routeIs(['users.deliveryMen']) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+                <li>
+                    <a href="{{ route('users.deliveryMen') }}">
+                        <i class="bi bi-circle"></i><span>Listar</span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        @endhasanyrole
         @hasrole('Administrador')
         <li class="nav-heading">Sistema</li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs(['users.*']) ? '' : 'collapsed' }}" data-bs-target="#users-nav"
+            <a class="nav-link {{ request()->routeIs(['users.index', 'users.create', 'users.edit']) ? '' : 'collapsed' }}" data-bs-target="#users-nav"
                 data-bs-toggle="collapse" href="#">
                 <i class="bi bi-people"></i>
                 <span>Usuários</span>
                 <i class="bi bi-chevron-down ms-auto"></i>
             </a>
-            <ul id="users-nav" class="nav-content collapse {{ request()->routeIs(['users.*']) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
+            <ul id="users-nav" class="nav-content collapse {{ request()->routeIs(['users.index', 'users.create', 'users.edit']) ? 'show' : '' }}" data-bs-parent="#sidebar-nav">
                 @can('Listar usuários')
                 <li>
                     <a href="{{ route('users.index') }}" class="{{ isActive('users.index') }}">

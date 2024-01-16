@@ -1,6 +1,6 @@
 <x-app>
     <x-slot:title>
-        {{ config('app.name') }} - Usuários
+        {{ config('app.name') }} - Editar usuário
     </x-slot>
     <main id="main" class="main">
         <div class="row d-flex justify-content-start mb-3">
@@ -162,6 +162,7 @@
                             data: 'detachButton',
                             name: 'detachButton',
                             orderable: false,
+                            searchable: false,
                             width: '1%',
                         },
                     ],

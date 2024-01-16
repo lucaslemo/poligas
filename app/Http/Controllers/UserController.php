@@ -26,6 +26,7 @@ class UserController extends Controller
                     $query->where('type', $role);
                 })
                 ->when($id, function($query) use($id){
+                    $query->with('managers');
                     $query->whereHas('managers', function($query) use($id){
                         $query->where('get_manager_user_id', $id);
                     });
@@ -43,9 +44,19 @@ class UserController extends Controller
                 ->addColumn('detachButton', function ($user) {
                     return view('users.partials.detachButton', ['user' => $user]);
                 })
+                ->addColumn('assign_at', function ($user) {
+                    $assign_at = isset($user->managers[0])
+                        ? $user->managers[0]->pivot->created_at
+                        : null;
+                    return $assign_at;
+                })
                 ->filterColumn('full_name', function($query, $keyword) {
-                    $sql = "CONCAT(users.first_name,'-',users.last_name) like ?";
+                    $sql = "CONCAT(users.first_name,' ',users.last_name) like ?";
                     $query->whereRaw($sql, ["%{$keyword}%"]);
+                })
+                ->orderColumn('full_name', function($query, $order) {
+                    $query->orderBy('first_name', $order);
+                    $query->orderBy('last_name', $order);
                 })
                 ->make(true);
         }
@@ -86,6 +97,14 @@ class UserController extends Controller
     public function index()
     {
         return view('users.index');
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function deliveryMenIndex()
+    {
+        return view('deliveryMen.index');
     }
 
     /**

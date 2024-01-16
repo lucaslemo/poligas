@@ -102,7 +102,7 @@ class User extends Authenticatable
             'manager_has_delivery_men',
             'get_manager_user_id',
             'get_deliveryman_user_id',
-        );
+        )->withTimestamps();
     }
 
     public function managers()
@@ -112,6 +112,6 @@ class User extends Authenticatable
             'manager_has_delivery_men',
             'get_deliveryman_user_id',
             'get_manager_user_id',
-        );
+        )->withTimestamps();
     }
 }

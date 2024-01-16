@@ -20,6 +20,13 @@ Route::get('/', function () {
     return view('dashboard/index');
 })->middleware(['auth'])->name('dashboard');
 
+// Grupo de rotas para administradores e gerentes
+Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
+    // User
+    Route::get('/users/load/{role?}', [UserController::class, 'loadDataTable'])->name('users.load');
+    Route::get('users/deliveryMen', [UserController::class, 'deliveryMenIndex'])->name('users.deliveryMen');
+});
+
 // Grupo de rotas para administradores
 Route::group(['middleware' => ['auth', 'role:Administrador']], function () {
     // Permission
@@ -27,7 +34,6 @@ Route::group(['middleware' => ['auth', 'role:Administrador']], function () {
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
 
     // User
-    Route::get('/users/load/{role?}', [UserController::class, 'loadDataTable'])->name('users.load');
     Route::get('users/getUsers/{role?}', [UserController::class, 'getUsers'])->name('users.getUsers');
     Route::put('users/{id}/activate', [UserController::class, 'activateUser'])->name('users.activate');
     Route::put('users/{id}/deactivate', [UserController::class, 'deactivateUser'])->name('users.deactivate');

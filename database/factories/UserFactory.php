@@ -18,7 +18,7 @@ class UserFactory extends Factory
      */
     private function assignRole(...$roles): UserFactory
     {
-        return $this->afterCreating(fn(User $user) => $user->syncRoles($roles));
+        return $this->afterCreating(fn (User $user) => $user->syncRoles($roles));
     }
 
     /**
@@ -47,7 +47,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'type' => fake()->randomElement(['Gerente', 'Entregador']),
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$g85y/3rjBNmXAW0ifGUkWe7kHiUyFN6f9DIUIghA9KWNPKRT2wsIC', // senha
             'remember_token' => Str::random(10),
             'status' => false,
             'image_profile' => null

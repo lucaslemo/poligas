@@ -3,7 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Address;
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +17,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seeders obrigatórias
         $this->call([
             PermissionsSeeder::class,
-            UserSeeder::class
+            UserSeeder::class,
         ]);
 
-        \App\Models\User::factory(100)->create();
+        // Seeders apenas para desenvolvimento
+        if(!App::isProduction()) {
+            $this->call([
+                CustomerSeeder::class
+            ]);
+        }
     }
 }

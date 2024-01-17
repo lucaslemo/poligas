@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 class UserSeeder extends Seeder
@@ -27,15 +28,29 @@ class UserSeeder extends Seeder
             'status' => true,
         ])->assignRole('Administrador');
 
-        User::create([
-            'id' => 2,
-            'first_name' => 'lucas',
-            'last_name' => 'lemos',
-            'username' => 'lucaslemo',
-            'email' => 'lucas@email.com',
-            'type' => 'Administrador',
-            'password' => 'senha',
-            'status' => true,
-        ])->assignRole('Administrador');
+        if(!App::isProduction()) {
+            User::create([
+                'id' => 2,
+                'first_name' => 'lucas',
+                'last_name' => 'lemos',
+                'username' => 'lucaslemo',
+                'email' => 'lucas@email.com',
+                'type' => 'Administrador',
+                'password' => 'senha',
+                'status' => true,
+            ])->assignRole('Administrador');
+
+            User::factory()
+            ->has(
+                User::factory()
+                    ->count(10)
+                    ->state(function (array $attributes, User $user) {
+                        return ['type' => 'Entregador'];
+                    }),
+                'deliveryMen',
+            )
+            ->count(10)
+            ->create(['type' => 'Gerente']);
+        }
     }
 }

@@ -19,7 +19,7 @@ class PermissionsSeeder extends Seeder
         DB::table('roles')->delete();
 
         $roleAdmin = Role::create(['name' => 'Administrador']);
-        Role::create(['name' => 'Gerente']);
+        $roleManager = Role::create(['name' => 'Gerente']);
         Role::create(['name' => 'Entregador']);
 
         // Usuários
@@ -27,6 +27,14 @@ class PermissionsSeeder extends Seeder
         foreach($permissionsUsers as $permissionUser) {
             $permission = Permission::create(['name' =>  $permissionUser, 'group' => 'Usuários']);
             $roleAdmin->givePermissionTo($permission);
+        }
+
+        // Entregadores
+        $permissionDelivery = ['Listar entregadores'];
+        foreach($permissionDelivery as $permission) {
+            $permission = Permission::create(['name' =>  $permission, 'group' => 'Entregadores']);
+            $roleAdmin->givePermissionTo($permission);
+            $roleManager->givePermissionTo($permission);
         }
 
         // Permissões

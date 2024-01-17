@@ -30,9 +30,17 @@ class PermissionsSeeder extends Seeder
         }
 
         // Entregadores
-        $permissionDelivery = ['Listar entregadores'];
-        foreach($permissionDelivery as $permission) {
-            $permission = Permission::create(['name' =>  $permission, 'group' => 'Entregadores']);
+        $permissionsDelivery = ['Listar entregadores'];
+        foreach($permissionsDelivery as $permissionDelivery) {
+            $permission = Permission::create(['name' =>  $permissionDelivery, 'group' => 'Entregadores']);
+            $roleAdmin->givePermissionTo($permission);
+            $roleManager->givePermissionTo($permission);
+        }
+
+        // Clientes
+        $permissionsCustomer = ['Cadastrar cliente', 'Listar clientes', 'Editar cliente'];
+        foreach($permissionsCustomer as $permissionCustomer) {
+            $permission = Permission::create(['name' =>  $permissionCustomer, 'group' => 'Clientes']);
             $roleAdmin->givePermissionTo($permission);
             $roleManager->givePermissionTo($permission);
         }

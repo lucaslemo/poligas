@@ -77,11 +77,15 @@
                                         </div>
                                     </div>
                                 </fieldset>
-                                <h6 class="card-title fs-6">Endereço</h6>
+                                <h6 class="card-title fs-6">Endereço principal</h6>
                                 <div class="row mb-3">
                                     <label for="zipCodeInput" class="col-sm-2 col-form-label">CEP</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control zip_code_mask" id="zipCodeInput" value="{{ old('zip_code') }}" name="zip_code" required>
+                                        <small>
+                                            <i class="bi bi-info-circle text-secondary"></i>
+                                            Preencha o CEP, tentaremos buscar o resto para você.
+                                        </small>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -142,7 +146,7 @@
                 $('#codeLabel').html('CNPJ');
                 $('#codeInput').mask('00.000.000/0000-00', {reverse: true});
             }
-        })
+        });
 
         $('#zipCodeInput').blur(function() {
             const zipCode = $(this).val().replace(/[^0-9]/, "");
@@ -173,7 +177,7 @@
                     },
                 });
             }
-        })
+        });
 
     </script>
     @endpush

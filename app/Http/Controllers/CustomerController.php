@@ -86,7 +86,8 @@ class CustomerController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $customer = Customer::findOrFail($id);
+        return view('customers.edit', compact('customer'));
     }
 
     /**
@@ -94,6 +95,18 @@ class CustomerController extends Controller
      */
     public function update(CustomerRequest $request, string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $customer = Customer::findOrFail($id);
+            $customer->fill($request->validated());
+            $customer->save();
+
+            DB::commit();
+            return Redirect::route('customers.edit', $id)->with('status', 'Cliente atualizado com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('customers.edit', $id)->withErrors($th->getMessage());
+        }
     }
 }

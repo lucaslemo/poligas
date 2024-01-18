@@ -28,7 +28,7 @@ class CustomerRequest extends FormRequest
         $requiredOrNullable = $id ? 'nullable' : 'required';
         $codeMax = $this->type == 'Pessoa Física' ? 'digits:11' : 'digits:14';
         return [
-            'name' => [$requiredOrNullable, 'string'],
+            'name' => ['required', 'string'],
             'code' => ['nullable', $codeMax, Rule::unique(Customer::class)->ignore($id)],
             'phone_number' => ['nullable', 'digits_between:10,11'],
             'type' => ['required', 'string', Rule::in(['Pessoa Física', 'Pessoa Jurídica'])],

@@ -30,7 +30,9 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/isActive.php"
+            "app/Helpers/isActive.php",
+            "app/Helpers/formatCnpjCpf.php",
+            "app/Helpers/formatPhoneNumber.php"
         ]
     },
     "autoload-dev": {

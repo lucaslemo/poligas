@@ -1,14 +1,14 @@
 <x-app>
     <x-slot:title>
-        {{ config('app.name') }} - Permissões
+        {{ config('app.name') }} - Clientes
     </x-slot>
     <main id="main" class="main">
         <div class="row d-flex justify-content-start mb-3">
             <div class="col-md-auto pagetitle align-self-center mb-0 py-3">
-                <h1>Permissões</h1>
+                <h1>Clientes</h1>
                 <nav>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item">Permissões</li>
+                        <li class="breadcrumb-item">Clientes</li>
                         <li class="breadcrumb-item active">Listar</li>
                     </ol>
                 </nav>
@@ -20,16 +20,17 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Permissões</h5>
-                            <p>Lista das permissões cadastradas no sistema</p>
+                            <h5 class="card-title">Clientes</h5>
+                            <p>Lista dos clientes cadastrados no sistema</p>
 
-                            <table id="permissionsDataTable" class="table table-sm">
+                            <table id="customersDataTable" class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
-                                        <th scope="col">Permissão</th>
-                                        <th scope="col">Grupo</th>
-                                        <th scope="col">Tipo de Usuário</th>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">Tipo</th>
+                                        <th scope="col">CPF/CNPJ</th>
+                                        <th scope="col">Telefone</th>
                                         <th scope="col">Registro</th>
                                     </tr>
                                 </thead>
@@ -46,15 +47,15 @@
     @push('scripts')
         <script type="text/javascript">
             $(document).ready(function() {
-                const routePermissionsDataTable = "{{ route('permissions.load') }}";
-                const tablePermissions = $('#permissionsDataTable').DataTable({
+                const routeCustomersDataTable = "{{ route('customers.load') }}";
+                const tableCustomers = $('#customersDataTable').DataTable({
                     searching: true,
                     responsive: true,
                     "pageLength": 10,
                     "processing": true,
                     "serverSide": true,
                     "ajax": {
-                        url: routePermissionsDataTable,
+                        url: routeCustomersDataTable,
                     },
                     "columns": [{
                             data: 'id',
@@ -63,17 +64,21 @@
                         {
                             data: 'name',
                             name: 'name',
-                        },
-                        {
-                            data: 'group',
-                            name: 'group',
-                        },
-                        {
-                            data: 'roles',
-                            name: 'roles',
                             render: function(data, type, full, meta) {
-                                return data != '' ? data : '-';
+                                return `<a href="${full.routeEdit}">${data}</a>`;
                             }
+                        },
+                        {
+                            data: 'type',
+                            name: 'type',
+                        },
+                        {
+                            data: 'code',
+                            name: 'code',
+                        },
+                        {
+                            data: 'phone_number',
+                            name: 'phone_number',
                         },
                         {
                             data: 'created_at',
@@ -99,10 +104,10 @@
                             "previous": "Anterior"
                         },
                         "search": "Buscar",
-                        "info": "Mostrando de _START_ a _END_ de _TOTAL_ permissões",
+                        "info": "Mostrando de _START_ a _END_ de _TOTAL_ clientes",
                         "infoEmpty": "Não há registros disponíveis",
-                        "infoFiltered": "(Filtrados de _MAX_ permissões)",
-                        "lengthMenu": "Mostrar _MENU_ permissões",
+                        "infoFiltered": "(Filtrados de _MAX_ clientes)",
+                        "lengthMenu": "Mostrar _MENU_ clientes",
                         "infoThousands": ".",
                         "emptyTable": "Nenhum registro encontrado",
                         "zeroRecords": "Nenhum registro correspondente encontrado",

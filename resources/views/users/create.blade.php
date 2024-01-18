@@ -23,7 +23,7 @@
                             <h5 class="card-title">Cadastrar novo usuário</h5>
                             <form id="createUserForm" action="{{ route('users.store') }}" class="row g-3" method="POST"
                             accept-charset="utf-8" enctype="multipart/form-data">
-                            @csrf
+                                @csrf
                                 <div class="row mb-3">
                                     <label for="firstNameInput" class="col-sm-2 col-form-label">Nome</label>
                                     <div class="col-sm-10">

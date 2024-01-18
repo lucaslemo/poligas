@@ -216,6 +216,12 @@ return [
         'remember' => 'manter-me conectado',
         'type' => 'tipo',
         'deliveryman_id' => 'novo entregador',
+        'code' => 'CPF/CNPJ',
+        'zip_code' => 'CEP',
+        'street' => 'rua',
+        'number' => 'número',
+        'neighborhood' => 'bairro',
+
     ],
 
 ];

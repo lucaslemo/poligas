@@ -207,6 +207,7 @@
                             $('#deleteImageProfile').removeClass('visually-hidden');
                         }
                     } catch (error) {
+                        console.log(error);
                         $('#imageProfile').val('');
                         $('#clientMessages').empty();
                         $('#clientMessages').html(`

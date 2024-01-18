@@ -223,7 +223,8 @@
                             tableUsers.ajax.reload(null, false);
                         },
                         error: function(xhr, status, error) {
-                            alert(xhr.responseJSON.error);
+                            console.log(xhr);
+                            alert(xhr.responseJSON.error || xhr.responseJSON.message);
                         }
                     });
                 });
@@ -242,11 +243,12 @@
                             tableUsers.ajax.reload(null, false);
                         },
                         error: function(xhr, status, error) {
+                            console.log(xhr);
                             $('#clientMessages').empty();
                             $('#clientMessages').html(`
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                                 Erro ao inserir o entregador a esse usuário.${' '}
-                                <small class="fw-bold">(${xhr.responseJSON.error})</small>
+                                <small class="fw-bold">(${xhr.responseJSON.error || xhr.responseJSON.message})</small>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>`);
                         }

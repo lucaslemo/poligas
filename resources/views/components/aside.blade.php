@@ -15,13 +15,18 @@
         </x-nav.aside-item>
 
         @hasanyrole('Administrador|Gerente')
+            {{-- Nav clientes --}}
             <x-nav.aside-item title="Clientes" uniqueId="customers-nav" parentId="sidebar-nav"
-            icon="bi bi-person-lines-fill" activeRoutes="{{ '' }}">
+            icon="bi bi-person-lines-fill" activeRoutes="{{ 'customers.*' }}">
                 @can('Listar clientes')
-                    <x-nav.aside-sub-item title="Listar" url="#" class="{{ isActive('#') }}"/>
+                    <x-nav.aside-sub-item title="Listar" url="{{ route('customers.index') }}" class="{{ isActive('customers.index') }}"/>
+                @endcan
+                @can('Cadastrar cliente')
+                    <x-nav.aside-sub-item title="Cadastrar" url="{{ route('customers.create') }}" class="{{ isActive('customers.create') }}"/>
                 @endcan
             </x-nav.aside-item>
 
+            {{-- Nav entregadores --}}
             <x-nav.aside-item title="Entregadores" uniqueId="delivary-men-nav" parentId="sidebar-nav"
             icon="ri ri-bike-line" activeRoutes="{{ 'users.deliveryMen' }}">
                 @can('Listar entregadores')

@@ -35,7 +35,8 @@
     </body>
 
     <!-- Javasript -->
-    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="{{ asset('build/assets/jquey-3.6.3.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/jquery.mask.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/apexcharts.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/bootstrap.bundle.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/chart.min.js') }}" type="text/javascript"></script>
@@ -47,6 +48,7 @@
     <script src="{{ asset('build/assets/validate.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/main.js') }}" type="text/javascript"></script>
     <script src="{{ asset('build/assets/helpers.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('build/assets/translateStates.js') }}" type="text/javascript"></script>
     @stack('scripts')
 
 </html>

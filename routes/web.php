@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ACL\PermissionController;
+use App\Http\Controllers\CustomerController;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +24,10 @@ Route::get('/', function () {
 
 // Grupo de rotas para administradores e gerentes
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
+    // Customer
+    Route::get('/customers/load/{type?}', [CustomerController::class, 'loadDataTable'])->name('customers.load');
+    Route::resource('/customers', CustomerController::class)->except(['show', 'destroy']);
+
     // User
     Route::get('/users/load/{role?}', [UserController::class, 'loadDataTable'])->name('users.load');
     Route::get('users/deliveryMen', [UserController::class, 'deliveryMenIndex'])->name('users.deliveryMen');

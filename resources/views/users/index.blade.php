@@ -129,7 +129,8 @@
                             tableUsers.ajax.reload(null, false);
                         },
                         error: function(xhr, status, error) {
-                            alert(xhr.responseJSON.error);
+                            console.error(xhr);
+                            alert(xhr.responseJSON.error || xhr.responseJSON.message);
                         }
                     });
                 });
@@ -145,7 +146,8 @@
                             tableUsers.ajax.reload(null, false);
                         },
                         error: function(xhr, status, error) {
-                            alert(xhr.responseJSON.error);
+                            console.error(xhr);
+                            alert(xhr.responseJSON.error || xhr.responseJSON.message);
                         }
                     });
                 });

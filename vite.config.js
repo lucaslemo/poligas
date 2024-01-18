@@ -14,6 +14,14 @@ export default defineConfig({
         viteStaticCopy({
             targets: [
                 {
+                    src: 'resources/assets/vendor/jQuery/jquey-3.6.3.min.js',
+                    dest: 'assets'
+                },
+                {
+                    src: 'resources/assets/vendor/jQuery-Mask-Plugin/jquery.mask.min.js',
+                    dest: 'assets'
+                },
+                {
                     src: 'resources/assets/vendor/apexcharts/apexcharts.min.js',
                     dest: 'assets'
                 },
@@ -66,6 +74,10 @@ export default defineConfig({
                 },
                 {
                     src: 'resources/assets/js/helpers.js',
+                    dest: 'assets'
+                },
+                {
+                    src: 'resources/assets/js/translateStates.js',
                     dest: 'assets'
                 }
             ]

@@ -19,6 +19,7 @@ class AddressFactory extends Factory
         return [
             'street' => fake()->streetName(),
             'number' => fake()->buildingNumber(),
+            'complement' => null,
             'neighborhood' => fake()->word(),
             'city' => fake()->randomElement(['Juazeiro do norte', 'Várzea Alegre', 'Crato', 'Barbalha']),
             'state' => 'Ceará',

@@ -30,12 +30,29 @@ class Address extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'primary' => 'boolean',
+    ];
+
+    /**
      * Log all attributes on the model
      */
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logOnly(['*']);
+    }
+
+    public function zipCodeFormatted(): string
+    {
+        if (!$this->zip_code) {
+            return '-';
+        }
+        return formatZipCode($this->zip_code);
     }
 
     /**

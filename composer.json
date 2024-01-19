@@ -32,7 +32,8 @@
         "files": [
             "app/Helpers/isActive.php",
             "app/Helpers/formatCnpjCpf.php",
-            "app/Helpers/formatPhoneNumber.php"
+            "app/Helpers/formatPhoneNumber.php",
+            "app/Helpers/formatZipCode.php"
         ]
     },
     "autoload-dev": {

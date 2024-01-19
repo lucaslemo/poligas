@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ACL\PermissionController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CustomerController;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +25,11 @@ Route::get('/', function () {
 
 // Grupo de rotas para administradores e gerentes
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
+    // Address
+    Route::get('/addresses/load', [AddressController::class, 'loadDataTable'])->name('addresses.load');
+    Route::put('/addresses/{id}/primary', [AddressController::class, 'primary'])->name('addresses.primary');
+    Route::resource('/addresses', AddressController::class)->only(['store', 'edit', 'update']);
+
     // Customer
     Route::get('/customers/load/{type?}', [CustomerController::class, 'loadDataTable'])->name('customers.load');
     Route::resource('/customers', CustomerController::class)->except(['show', 'destroy']);

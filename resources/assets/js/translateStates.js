@@ -36,3 +36,8 @@ const translateStates = (uf) => {
     }
 
 }
+
+const translateUf = (state) => {
+    const [key] = Object.entries(stateJson).find(([key, val]) => val === state) || [];
+    return key || null;
+}

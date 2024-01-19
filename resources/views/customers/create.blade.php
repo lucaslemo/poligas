@@ -32,10 +32,14 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Cadastrar novo cliente</h5>
-                            <h6 class="card-title fs-6">Dados pessoais</h6>
                             <form id="createCustomerForm" action="{{ route('customers.store') }}" class="row g-3" method="POST"
                             accept-charset="utf-8" enctype="multipart/form-data">
                                 @csrf
+                                <div class="row mb-3">
+                                    <div class="col-sm-10">
+                                        <h6 class="card-title fs-6">Dados pessoais</h6>
+                                    </div>
+                                </div>
                                 <div class="row mb-3">
                                     <label for="nameInput" class="col-sm-2 col-form-label">Nome</label>
                                     <div class="col-sm-10">
@@ -77,7 +81,11 @@
                                         </div>
                                     </div>
                                 </fieldset>
-                                <h6 class="card-title fs-6">Endereço principal</h6>
+                                <div class="row mb-3">
+                                    <div class="col-sm-10">
+                                        <h6 class="card-title fs-6">Endereço principal</h6>
+                                    </div>
+                                </div>
                                 <div class="row mb-3">
                                     <label for="zipCodeInput" class="col-sm-2 col-form-label">CEP</label>
                                     <div class="col-sm-10">

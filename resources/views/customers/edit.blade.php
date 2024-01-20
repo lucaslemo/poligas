@@ -303,6 +303,7 @@
                         contentType: 'application/json',
                         success: function(response) {
                             try{
+                                $('#clientMessages').empty();
                                 $('#streetInput').val(response.logradouro);
                                 $('#numberInput').val(response.siafi);
                                 $('#complementInput').val(response.complemento);
@@ -363,6 +364,7 @@
 
 
             $('#cancelAddress').on('click', function() {
+                $('#clientMessages').empty();
                 $('#spinnerAssing').addClass('visually-hidden');
                 $('#assingAddress').prop('disabled', false);
                 $('#hidePartForm').slideUp("slow");

@@ -28,7 +28,7 @@ Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function 
     // Address
     Route::get('/addresses/load', [AddressController::class, 'loadDataTable'])->name('addresses.load');
     Route::put('/addresses/{id}/primary', [AddressController::class, 'primary'])->name('addresses.primary');
-    Route::resource('/addresses', AddressController::class)->only(['store', 'edit', 'update']);
+    Route::resource('/addresses', AddressController::class)->only(['store', 'edit', 'update', 'destroy']);
 
     // Customer
     Route::get('/customers/load/{type?}', [CustomerController::class, 'loadDataTable'])->name('customers.load');

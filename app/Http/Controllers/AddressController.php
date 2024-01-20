@@ -124,7 +124,19 @@ class AddressController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $address = Address::findOrFail($id);
+            $customerId = $address->get_customer_id;
+            $address->delete();
+
+            DB::commit();
+            return Redirect::route('customers.edit', $customerId)->with('status', 'Endereço excluído com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('customers.edit', $customerId)->withErrors($th->getMessage());
+        }
     }
 
     /**

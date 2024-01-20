@@ -68,7 +68,11 @@
                                 </div>
                                 <div class="text-center">
                                     @if(!$address->primary)
-                                    <button class="btn btn-danger" type="button">
+                                    <button id="deleteAddressButton" class="btn btn-danger" type="button">
+                                        Excluir
+                                    </button>
+                                    @else
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Um endereço principal não pode ser excluido">
                                         Excluir
                                     </button>
                                     @endif
@@ -78,10 +82,23 @@
                                     </x-forms.button-with-spinner>
                                 </div>
                             </form>
+                            <form id="deleteAddressForm" class="visually-hidden" action="{{ route('addresses.destroy', $address->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
+    @if(!$address->primary)
+    @push('scripts')
+    <script type="text/javascript">
+        $('#deleteAddressButton').on('click', function() {
+            $('#deleteAddressForm').submit();
+        });
+    </script>
+    @endpush
+    @endif
 </x-app>

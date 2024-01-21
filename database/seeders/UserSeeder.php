@@ -43,12 +43,14 @@ class UserSeeder extends Seeder
             User::factory()
             ->has(
                 User::factory()
+                    ->unverified()
                     ->count(10)
                     ->state(function (array $attributes, User $user) {
                         return ['type' => 'Entregador'];
                     }),
                 'deliveryMen',
             )
+            ->unverified()
             ->count(10)
             ->create(['type' => 'Gerente']);
         }

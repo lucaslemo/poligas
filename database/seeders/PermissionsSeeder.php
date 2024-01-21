@@ -53,6 +53,14 @@ class PermissionsSeeder extends Seeder
             $roleManager->givePermissionTo($permission);
         }
 
+        // Brands
+        $permissionsBrands = ['Cadastrar marca', 'Listar marcas'];
+        foreach($permissionsBrands as $permissionsBrand) {
+            $permission = Permission::create(['name' =>  $permissionsBrand, 'group' => 'Marcas']);
+            $roleAdmin->givePermissionTo($permission);
+            $roleManager->givePermissionTo($permission);
+        }
+
         // Permissões
         $selfPermissions = ['Listar permissões'];
         foreach($selfPermissions as $selfPermission) {

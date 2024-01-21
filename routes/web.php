@@ -4,9 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ACL\PermissionController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
-use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,9 +26,14 @@ Route::get('/', function () {
 
 // Grupo de rotas para administradores e gerentes
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
+    // Brands
+    Route::get('/brands/load', [BrandController::class, 'loadDataTable'])->name('brands.load');
+    Route::resource('/brands', BrandController::class);
+
     // Products
+    Route::get('/products/load', [ProductController::class, 'loadDataTable'])->name('products.load');
     Route::resource('/products', ProductController::class);
-    
+
     // Address
     Route::get('/addresses/load', [AddressController::class, 'loadDataTable'])->name('addresses.load');
     Route::put('/addresses/{id}/primary', [AddressController::class, 'primary'])->name('addresses.primary');

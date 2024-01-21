@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -20,6 +21,17 @@ class Product extends Model
     protected $fillable = [
         'name',
     ];
+
+    /**
+     * Interact with the products's name.
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => strtoupper($value),
+            set: fn (string $value) => strtolower($value),
+        );
+    }
 
     /**
      * Log all attributes on the model

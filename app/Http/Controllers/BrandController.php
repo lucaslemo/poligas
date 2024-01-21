@@ -2,13 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BrandRequest;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Response;
 
 class BrandController extends Controller
 {
+    /**
+     * DataTable.
+     */
+    public function loadDataTable(Request $request)
+    {
+        if ($request->ajax()) {
+            $brands = Brand::select();
+            return DataTables::eloquent($brands)
+                ->addColumn('routeEdit', function($brand) {
+                    return route('brands.edit', $brand->id);
+                })
+                ->make(true);
+        }
+    }
 
     /**
      * Get records.
@@ -41,7 +58,7 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
+        return view('brands.index');
     }
 
     /**
@@ -49,15 +66,27 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+        return view('brands.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BrandRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $brand = new Brand();
+            $brand->fill($request->validated());
+            $brand->save();
+
+            DB::commit();
+            return Redirect::route('brands.create')->with('status', 'Marca cadastrada com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('brands.create')->withErrors($th->getMessage());
+        }
     }
 
     /**

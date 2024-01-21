@@ -1,14 +1,14 @@
 <x-app>
     <x-slot:title>
-        {{ config('app.name') }} - Listar produtos
+        {{ config('app.name') }} - Listar marcas
     </x-slot>
     <main id="main" class="main">
         <div class="row d-flex justify-content-start mb-3">
             <div class="col-md-auto pagetitle align-self-center mb-0 py-3">
-                <h1>Produtos</h1>
+                <h1>Marcas</h1>
                 <nav>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item">Produtos</li>
+                        <li class="breadcrumb-item">Marcas</li>
                         <li class="breadcrumb-item active">Listar</li>
                     </ol>
                 </nav>
@@ -20,10 +20,10 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Produtos</h5>
-                            <p>Lista dos produtos cadastrados no sistema</p>
+                            <h5 class="card-title">Marcas</h5>
+                            <p>Lista das marcas cadastradas no sistema</p>
 
-                            <table id="productsDataTable" class="table table-sm">
+                            <table id="brandsDataTable" class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th scope="col">#</th>
@@ -44,15 +44,15 @@
     @push('scripts')
     <script type="text/javascript">
         $(document).ready(function() {
-            const routeProductsDataTable = "{{ route('products.load') }}";
-            const tableProducts = $('#productsDataTable').DataTable({
+            const routeBrandsDataTable = "{{ route('brands.load') }}";
+            const tableBrands = $('#brandsDataTable').DataTable({
                 searching: true,
                 responsive: true,
                 "pageLength": 10,
                 "processing": true,
                 "serverSide": true,
                 "ajax": {
-                    url: routeProductsDataTable,
+                    url: routeBrandsDataTable,
                 },
                 "columns": [{
                         data: 'id',
@@ -90,10 +90,10 @@
                         "previous": "Anterior"
                     },
                     "search": "Buscar",
-                    "info": "Mostrando de _START_ a _END_ de _TOTAL_ produtos",
+                    "info": "Mostrando de _START_ a _END_ de _TOTAL_ marcas",
                     "infoEmpty": "Não há registros disponíveis",
-                    "infoFiltered": "(Filtrados de _MAX_ produtos)",
-                    "lengthMenu": "Mostrar _MENU_ produtos",
+                    "infoFiltered": "(Filtrados de _MAX_ marcas)",
+                    "lengthMenu": "Mostrar _MENU_ marcas",
                     "infoThousands": ".",
                     "emptyTable": "Nenhum registro encontrado",
                     "zeroRecords": "Nenhum registro correspondente encontrado",

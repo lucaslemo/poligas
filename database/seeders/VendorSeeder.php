@@ -3,21 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\Address;
-use App\Models\Customer;
+use App\Models\Vendor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class CustomerSeeder extends Seeder
+class VendorSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('customers')->delete();
-        DB::table('addresses')->whereNotNull('get_customer_id')->delete();
+        DB::table('vendors')->delete();
+        DB::table('addresses')->whereNotNull('get_vendor_id')->delete();
 
-        Customer::factory()->has(Address::factory()->count(1))->count(200)->create();
+        Vendor::factory()->has(Address::factory()->count(1))->count(50)->create();
     }
 }

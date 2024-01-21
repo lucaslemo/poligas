@@ -5,6 +5,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ACL\PermissionController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProductController;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +26,9 @@ Route::get('/', function () {
 
 // Grupo de rotas para administradores e gerentes
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
+    // Products
+    Route::resource('/products', ProductController::class);
+    
     // Address
     Route::get('/addresses/load', [AddressController::class, 'loadDataTable'])->name('addresses.load');
     Route::put('/addresses/{id}/primary', [AddressController::class, 'primary'])->name('addresses.primary');
@@ -36,7 +40,7 @@ Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function 
 
     // User
     Route::get('/users/load/{role?}', [UserController::class, 'loadDataTable'])->name('users.load');
-    Route::get('users/deliveryMen', [UserController::class, 'deliveryMenIndex'])->name('users.deliveryMen');
+    Route::get('/users/deliveryMen', [UserController::class, 'deliveryMenIndex'])->name('users.deliveryMen');
 });
 
 // Grupo de rotas para administradores
@@ -46,11 +50,11 @@ Route::group(['middleware' => ['auth', 'role:Administrador']], function () {
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
 
     // User
-    Route::get('users/getUsers/{role?}', [UserController::class, 'getUsers'])->name('users.getUsers');
-    Route::put('users/{id}/activate', [UserController::class, 'activateUser'])->name('users.activate');
-    Route::put('users/{id}/deactivate', [UserController::class, 'deactivateUser'])->name('users.deactivate');
-    Route::put('users/{id}/assignDeliveryman', [UserController::class, 'assignDeliveryman'])->name('users.assignDeliveryman');
-    Route::put('users/{id}/unassignDeliveryman', [UserController::class, 'unassignDeliveryman'])->name('users.unassignDeliveryman');
+    Route::get('/users/getUsers/{role?}', [UserController::class, 'getUsers'])->name('users.getUsers');
+    Route::put('/users/{id}/activate', [UserController::class, 'activateUser'])->name('users.activate');
+    Route::put('/users/{id}/deactivate', [UserController::class, 'deactivateUser'])->name('users.deactivate');
+    Route::put('/users/{id}/assignDeliveryman', [UserController::class, 'assignDeliveryman'])->name('users.assignDeliveryman');
+    Route::put('/users/{id}/unassignDeliveryman', [UserController::class, 'unassignDeliveryman'])->name('users.unassignDeliveryman');
     Route::resource('/users', UserController::class)->except(['show', 'destroy']);
 });
 

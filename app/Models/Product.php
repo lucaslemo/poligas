@@ -8,7 +8,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Customer extends Model
+class Product extends Model
 {
     use HasFactory, LogsActivity;
 
@@ -19,9 +19,6 @@ class Customer extends Model
      */
     protected $fillable = [
         'name',
-        'type',
-        'code',
-        'phone_number',
     ];
 
     /**
@@ -33,27 +30,11 @@ class Customer extends Model
             ->logOnly(['*']);
     }
 
-    public function codeFormatted(): string
-    {
-        if (!$this->code) {
-            return '-';
-        }
-        return formatCnpjCpf($this->code);
-    }
-
-    public function phoneNumberFormatted(): string
-    {
-        if (!$this->phone_number) {
-            return '-';
-        }
-        return formatPhoneNumber($this->phone_number);
-    }
-
     /**
-     * Get the addresses for the customer.
+     * Get the stocks for the product.
      */
-    public function addresses(): HasMany
+    public function stocks(): HasMany
     {
-        return $this->hasMany(Address::class, 'get_customer_id');
+        return $this->hasMany(Stock::class, 'get_product_id');
     }
 }

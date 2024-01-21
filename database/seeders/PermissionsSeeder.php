@@ -45,6 +45,14 @@ class PermissionsSeeder extends Seeder
             $roleManager->givePermissionTo($permission);
         }
 
+        // Produtos
+        $permissionsProducts = ['Cadastrar produto', 'Listar produtos'];
+        foreach($permissionsProducts as $permissionsProduct) {
+            $permission = Permission::create(['name' =>  $permissionsProduct, 'group' => 'Produtos']);
+            $roleAdmin->givePermissionTo($permission);
+            $roleManager->givePermissionTo($permission);
+        }
+
         // Permissões
         $selfPermissions = ['Listar permissões'];
         foreach($selfPermissions as $selfPermission) {

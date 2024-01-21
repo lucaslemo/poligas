@@ -26,6 +26,7 @@ class AddressFactory extends Factory
             'zip_code' => fake()->randomNumber(8, true),
             'primary' => true,
             'get_customer_id' => null,
+            'get_vendor_id' => null,
         ];
     }
 }

@@ -33,6 +33,17 @@
                     <x-nav.aside-sub-item title="Listar" url="{{ route('users.deliveryMen') }}" class="{{ isActive('users.deliveryMen') }}"/>
                 @endcan
             </x-nav.aside-item>
+
+            {{-- Nav produtos --}}
+            <x-nav.aside-item title="Produtos" uniqueId="products-nav" parentId="sidebar-nav"
+            icon="ri ri-product-hunt-line" activeRoutes="{{ 'products.*' }}">
+                @can('Listar produtos')
+                    <x-nav.aside-sub-item title="Listar" url="{{ route('products.index') }}" class="{{ isActive('products.index') }}"/>
+                @endcan
+                @can('Cadastrar produto')
+                    <x-nav.aside-sub-item title="Cadastrar" url="{{ route('products.create') }}" class="{{ isActive('products.create') }}"/>
+                @endcan
+            </x-nav.aside-item>
         @endhasanyrole
 
         @hasrole('Administrador')

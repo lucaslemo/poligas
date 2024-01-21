@@ -27,6 +27,7 @@ class Address extends Model
         'zip_code',
         'primary',
         'get_customer_id',
+        'get_vendor_id',
     ];
 
     /**

@@ -25,6 +25,11 @@ return new class extends Migration
             $table->unsignedBigInteger('get_customer_id')->nullable();
             $table->foreign('get_customer_id')->references('id')->on('customers')->onDelete('cascade');
 
+            $table->unsignedBigInteger('get_vendor_id')->nullable();
+            $table->foreign('get_vendor_id')->references('id')->on('vendors')->onDelete('cascade');
+
+            $table->check('NOT (get_customer_id IS NOT NULL AND get_vendor_id IS NOT NULL)', 'address_must_not_have_customer_and_vendor');
+
             $table->timestamps();
         });
     }

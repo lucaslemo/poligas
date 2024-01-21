@@ -28,11 +28,11 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
     // Brands
     Route::get('/brands/load', [BrandController::class, 'loadDataTable'])->name('brands.load');
-    Route::resource('/brands', BrandController::class);
+    Route::resource('/brands', BrandController::class)->except(['show', 'destroy']);
 
     // Products
     Route::get('/products/load', [ProductController::class, 'loadDataTable'])->name('products.load');
-    Route::resource('/products', ProductController::class);
+    Route::resource('/products', ProductController::class)->except(['show', 'destroy']);
 
     // Address
     Route::get('/addresses/load', [AddressController::class, 'loadDataTable'])->name('addresses.load');

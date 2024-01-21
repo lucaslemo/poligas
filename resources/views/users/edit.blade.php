@@ -20,7 +20,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title mb-5">Editando Usuário: {{ $user->fullname() }}</h5>
+                            <h5 class="card-title mb-5">Editando usuário: {{ $user->fullname() }}</h5>
                             <form id="createUserForm" action="{{ route('users.update', $user->id) }}" class="row g-3" method="POST"
                             accept-charset="utf-8" enctype="multipart/form-data">
                             @csrf

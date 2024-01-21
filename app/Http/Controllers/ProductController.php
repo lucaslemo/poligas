@@ -102,15 +102,28 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::findOrFail($id);
+        return view('products.edit', compact('product'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductRequest $request, string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $product = Product::findOrFail($id);
+            $product->fill($request->validated());
+            $product->save();
+
+            DB::commit();
+            return Redirect::route('products.edit', $id)->with('status', 'Produto atualizado com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('products.edit', $id)->withErrors($th->getMessage());
+        }
     }
 
     /**

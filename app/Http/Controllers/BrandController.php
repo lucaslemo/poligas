@@ -102,15 +102,28 @@ class BrandController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $brand = Brand::findOrFail($id);
+        return view('brands.edit', compact('brand'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(BrandRequest $request, string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $brand = Brand::findOrFail($id);
+            $brand->fill($request->validated());
+            $brand->save();
+
+            DB::commit();
+            return Redirect::route('brands.edit', $id)->with('status', 'Marca atualizada com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('brands.edit', $id)->withErrors($th->getMessage());
+        }
     }
 
     /**

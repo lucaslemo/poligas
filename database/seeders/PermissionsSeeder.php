@@ -61,6 +61,14 @@ class PermissionsSeeder extends Seeder
             $roleManager->givePermissionTo($permission);
         }
 
+        // Fornecedores
+        $permissionsVendors = ['Listar fornecedores'];
+        foreach($permissionsVendors as $permissionsVendor) {
+            $permission = Permission::create(['name' =>  $permissionsVendor, 'group' => 'Fornecedores']);
+            $roleAdmin->givePermissionTo($permission);
+            $roleManager->givePermissionTo($permission);
+        }
+
         // Permissões
         $selfPermissions = ['Listar permissões'];
         foreach($selfPermissions as $selfPermission) {

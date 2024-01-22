@@ -221,6 +221,7 @@ return [
         'street' => 'rua',
         'number' => 'número',
         'neighborhood' => 'bairro',
+        'phone_number' => 'telefone',
 
     ],
 

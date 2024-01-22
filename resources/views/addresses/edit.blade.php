@@ -8,7 +8,7 @@
                 <h1>Endereços</h1>
                 <nav>
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item">Clientes</li>
+                        <li class="breadcrumb-item">{{ $address->customer ? 'Clientes' : 'Fornecedores' }}</li>
                         <li class="breadcrumb-item">Endereços</li>
                         <li class="breadcrumb-item active">Editar</li>
                     </ol>
@@ -21,8 +21,8 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Editando endereço {{ $address->street }}</h5>
-                            <p  class="mb-5">Cliente: {{ $address->customer->name }}</p>
+                            <h5 class="card-title">Editando endereço: {{ $address->street }}</h5>
+                            <p  class="mb-5">{{ $address->customer ? 'Cliente: '.$address->customer->name : 'Fornecedor: '.$address->vendor->name }}</p>
                             <form id="createCustomerForm" action="{{ route('addresses.update', $address->id ) }}" class="row g-3" method="POST"
                             accept-charset="utf-8" enctype="multipart/form-data">
                                 @csrf

@@ -63,4 +63,12 @@ class Address extends Model
     {
         return $this->belongsTo(Customer::class, 'get_customer_id');
     }
+
+    /**
+     * Get the vendor that owns the address.
+     */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class, 'get_vendor_id');
+    }
 }

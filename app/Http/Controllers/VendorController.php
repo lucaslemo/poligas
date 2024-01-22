@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VendorRequest;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\Facades\DataTables;
 
 class VendorController extends Controller
@@ -69,15 +72,28 @@ class VendorController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $vendor = Vendor::findOrFail($id);
+        return view('vendors.edit', compact('vendor'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(VendorRequest $request, string $id)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $vendor = Vendor::findOrFail($id);
+            $vendor->fill($request->validated());
+            $vendor->save();
+
+            DB::commit();
+            return Redirect::route('vendors.edit', $id)->with('status', 'Fornecedor atualizado com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('vendors.edit', $id)->withErrors($th->getMessage());
+        }
     }
 
     /**

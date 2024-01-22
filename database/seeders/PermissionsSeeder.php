@@ -46,7 +46,7 @@ class PermissionsSeeder extends Seeder
         }
 
         // Produtos
-        $permissionsProducts = ['Cadastrar produto', 'Listar produtos'];
+        $permissionsProducts = ['Cadastrar produto', 'Listar produtos', 'Editar produto'];
         foreach($permissionsProducts as $permissionsProduct) {
             $permission = Permission::create(['name' =>  $permissionsProduct, 'group' => 'Produtos']);
             $roleAdmin->givePermissionTo($permission);
@@ -54,7 +54,7 @@ class PermissionsSeeder extends Seeder
         }
 
         // Brands
-        $permissionsBrands = ['Cadastrar marca', 'Listar marcas'];
+        $permissionsBrands = ['Cadastrar marca', 'Listar marcas', 'Editar marca'];
         foreach($permissionsBrands as $permissionsBrand) {
             $permission = Permission::create(['name' =>  $permissionsBrand, 'group' => 'Marcas']);
             $roleAdmin->givePermissionTo($permission);
@@ -62,9 +62,17 @@ class PermissionsSeeder extends Seeder
         }
 
         // Fornecedores
-        $permissionsVendors = ['Listar fornecedores'];
+        $permissionsVendors = ['Cadastrar fornecedor', 'Listar fornecedores', 'Editar fornecedor'];
         foreach($permissionsVendors as $permissionsVendor) {
             $permission = Permission::create(['name' =>  $permissionsVendor, 'group' => 'Fornecedores']);
+            $roleAdmin->givePermissionTo($permission);
+            $roleManager->givePermissionTo($permission);
+        }
+
+        // Endereços
+        $permissionsAddresses = ['Cadastrar endereço', 'Listar endereços', 'Editar endereço', 'Excluir endereço'];
+        foreach($permissionsAddresses as $permissionsAddress) {
+            $permission = Permission::create(['name' =>  $permissionsAddress, 'group' => 'Endereços']);
             $roleAdmin->givePermissionTo($permission);
             $roleManager->givePermissionTo($permission);
         }

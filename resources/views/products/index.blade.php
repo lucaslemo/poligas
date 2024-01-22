@@ -54,7 +54,8 @@
                 "ajax": {
                     url: routeProductsDataTable,
                 },
-                "columns": [{
+                "columns": [
+                    {
                         data: 'id',
                         name: 'id'
                     },

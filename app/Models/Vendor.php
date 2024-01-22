@@ -32,6 +32,14 @@ class Vendor extends Model
             ->logOnly(['*']);
     }
 
+    public function cnpjFormatted(): string
+    {
+        if (!$this->cnpj) {
+            return '-';
+        }
+        return formatCnpjCpf($this->cnpj);
+    }
+
     public function phoneNumberFormatted(): string
     {
         if (!$this->phone_number) {

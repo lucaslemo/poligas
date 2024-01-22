@@ -55,6 +55,17 @@
                     <x-nav.aside-sub-item title="Cadastrar" url="{{ route('brands.create') }}" class="{{ isActive('brands.create') }}"/>
                 @endcan
             </x-nav.aside-item>
+
+            {{-- Nav fornecedores --}}
+            <x-nav.aside-item title="Fornecedores" uniqueId="vendors-nav" parentId="sidebar-nav"
+            icon="bi bi-truck" activeRoutes="{{ 'vendors.*' }}">
+                @can('Listar fornecedores')
+                    <x-nav.aside-sub-item title="Listar" url="{{ route('vendors.index') }}" class="{{ isActive('vendors.index') }}"/>
+                @endcan
+                @can('Cadastrar fornecedor')
+                    <x-nav.aside-sub-item title="Cadastrar" url="{{ route('vendors.create') }}" class="{{ isActive('vendors.create') }}"/>
+                @endcan
+            </x-nav.aside-item>
         @endhasanyrole
 
         @hasrole('Administrador')

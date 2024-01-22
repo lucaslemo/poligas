@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\VendorRequest;
+use App\Models\Address;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,15 +49,33 @@ class VendorController extends Controller
      */
     public function create()
     {
-        //
+        return view('vendors.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(VendorRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $vendor = new Vendor();
+            $vendor->fill($request->validated());
+            $vendor->save();
+
+            $address = new Address();
+            $address->fill($request->validated());
+            $address->primary = true;
+            $address->get_vendor_id = $vendor->id;
+            $address->save();
+
+            DB::commit();
+            return Redirect::route('vendors.create')->with('status', 'Fornecedor cadastrado com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('vendors.create')->withErrors($th->getMessage());
+        }
     }
 
     /**

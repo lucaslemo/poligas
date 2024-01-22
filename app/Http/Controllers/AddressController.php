@@ -134,15 +134,16 @@ class AddressController extends Controller
      */
     public function destroy(string $id)
     {
+        $address = Address::findOrFail($id);
+        $customerId = $address->get_customer_id;
+        $vendorId = $address->get_vendor_id;
         try {
             DB::beginTransaction();
-
-            $address = Address::findOrFail($id);
-            $customerId = $address->get_customer_id;
-            $vendorId = $address->get_vendor_id;
+            
             $address->delete();
 
             DB::commit();
+
             if ($customerId) {
                 return Redirect::route('customers.edit', $customerId)->with('status', 'Endereço excluído com sucesso.');
             } else if ($vendorId) {
@@ -150,7 +151,12 @@ class AddressController extends Controller
             }
         } catch (\Throwable $th) {
             DB::rollback();
-            return Redirect::route('customers.edit', $customerId)->withErrors($th->getMessage());
+
+            if ($customerId) {
+                return Redirect::route('customers.edit', $customerId)->withErrors($th->getMessage());
+            } else if ($vendorId) {
+                return Redirect::route('vendors.edit', $vendorId)->withErrors($th->getMessage());
+            }
         }
     }
 

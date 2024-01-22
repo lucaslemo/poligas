@@ -36,7 +36,7 @@
                                     <label id="codeLabel" for="codeInput" class="col-sm-2 col-form-label">CNPJ</label>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control cnpj_mask"
-                                        id="codeInput" value="{{ $vendor->cnpj }}" name="code">
+                                        id="codeInput" value="{{ $vendor->cnpj }}" name="cnpj">
                                     </div>
                                 </div>
                                 <div class="row mb-3">

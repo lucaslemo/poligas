@@ -50,7 +50,7 @@ class VendorRequest extends FormRequest
     protected function sanitize()
     {
         $this->merge([
-            'cnpj' => preg_replace('/[\s\.\/-]/', '', $this->request->get('code')),
+            'cnpj' => preg_replace('/[\s\.\/-]/', '', $this->request->get('cnpj')),
             'phone_number' => preg_replace('/[\s\(\)-]/', '', $this->request->get('phone_number')),
             'zip_code' => preg_replace('/[\s\.-]/', '', $this->request->get('zip_code')),
         ]);

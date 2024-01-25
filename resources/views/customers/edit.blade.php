@@ -178,18 +178,6 @@
     </main>
     @push('scripts')
     <script type="text/javascript">
-
-        $(document).on('change', '.form-check-input' ,function() {
-            $('#codeLabel').removeClass('cpf_mask');
-            if( $('#typeInput1').is(':checked') ) {
-                $('#codeLabel').html('CPF');
-                $('#codeInput').mask('000.000.000-00', {reverse: true});
-            } else if ( $('#typeInput2').is(':checked') ) {
-                $('#codeLabel').html('CNPJ');
-                $('#codeInput').mask('00.000.000/0000-00', {reverse: true});
-            }
-        });
-
         $(document).ready(function() {
             const routeAddressesDataTable = "{{ route('addresses.load') }}";
             const tableAddresses = $('#addressesDataTable').DataTable({
@@ -376,6 +364,17 @@
                         alert(xhr.responseJSON.error || xhr.responseJSON.message);
                     }
                 });
+            });
+
+            $(document).on('change', '.form-check-input' ,function() {
+                $('#codeLabel').removeClass('cpf_mask');
+                if( $('#typeInput1').is(':checked') ) {
+                    $('#codeLabel').html('CPF');
+                    $('#codeInput').mask('000.000.000-00', {reverse: true});
+                } else if ( $('#typeInput2').is(':checked') ) {
+                    $('#codeLabel').html('CNPJ');
+                    $('#codeInput').mask('00.000.000/0000-00', {reverse: true});
+                }
             });
         });
     </script>

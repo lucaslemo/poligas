@@ -55,4 +55,12 @@ class Vendor extends Model
     {
         return $this->hasMany(Address::class, 'get_vendor_id');
     }
+
+    /**
+     * Get the stocks for the vendor.
+     */
+    public function stocks(): HasMany
+    {
+        return $this->hasMany(Stock::class, 'get_vendor_id');
+    }
 }

@@ -6,9 +6,13 @@
 
 @push('scripts')
     <script type="text/javascript">
-        $('#{{ $formId }}').on('submit', function() {
-            $('#myButton-{{ $id }}').prop('disabled', true);
-            $('#spinner-{{ $id }}').removeClass('visually-hidden');
+    
+        $(document).ready(function() {
+            $('#{{ $formId }}').on('submit', function() {
+                $('#myButton-{{ $id }}').prop('disabled', true);
+                $('#spinner-{{ $id }}').removeClass('visually-hidden');
+            });
         });
+
     </script>
 @endpush

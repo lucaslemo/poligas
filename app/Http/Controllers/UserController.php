@@ -20,7 +20,11 @@ class UserController extends Controller
     public function loadDataTable(Request $request, string|null $role = null)
     {
         if ($request->ajax()) {
-            $id = trim($request->delivery_men_from_manger_id);
+            $id =
+                $request->delivery_men_from_manger_id
+                ? trim($request->delivery_men_from_manger_id)
+                : null;
+                
             $users = User::select()
                 ->when($role, function($query) use($role) {
                     $query->where('type', $role);

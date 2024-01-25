@@ -94,11 +94,15 @@
     </main>
     @if(!$address->primary)
     @push('scripts')
-    <script type="text/javascript">
-        $('#deleteAddressButton').on('click', function() {
-            $('#deleteAddressForm').submit();
-        });
-    </script>
+
+        <script type="text/javascript">
+         $(document).ready(function() {
+            $('#deleteAddressButton').on('click', function() {
+                $('#deleteAddressForm').submit();
+            });
+         });
+        </script>
+
     @endpush
     @endif
 </x-app>

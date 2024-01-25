@@ -31,6 +31,10 @@ const checkLimitHightAndWidthFromInputImages = async (image, maxWidth, maxHeight
     return await response;
 }
 
+const formatDateForDatatable = (date) => {
+    return date.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'});
+}
+
 // Masks
 $('.zip_code_mask').mask('00000-000')
 $('.cpf_mask').mask('000.000.000-00', {reverse: true});

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,11 @@ class StockFactory extends Factory
      */
     public function definition(): array
     {
+        $date = Carbon::now()->subDays(rand(1, 15));
         return [
-            //
+            'vendor_value' => fake()->randomFloat(2, 100, 300),
+            'created_at' => $date,
+            'updated_at' => $date,
         ];
     }
 }

@@ -77,6 +77,14 @@ class PermissionsSeeder extends Seeder
             $roleManager->givePermissionTo($permission);
         }
 
+        // Estoques
+        $permissionsStocks = ['Cadastrar estoque', 'Listar estoques', 'Exibir estoque', 'Excluir estoque'];
+        foreach($permissionsStocks as $permissionsStock) {
+            $permission = Permission::create(['name' =>  $permissionsStock, 'group' => 'Estoques']);
+            $roleAdmin->givePermissionTo($permission);
+            $roleManager->givePermissionTo($permission);
+        }
+
         // Permissões
         $selfPermissions = ['Listar permissões'];
         foreach($selfPermissions as $selfPermission) {

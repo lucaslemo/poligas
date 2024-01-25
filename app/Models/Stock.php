@@ -18,8 +18,10 @@ class Stock extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'vendor_value',
         'get_product_id',
         'get_brand_id',
+        'get_vendor_id',
     ];
 
     /**
@@ -45,5 +47,13 @@ class Stock extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'get_product_id');
+    }
+
+    /**
+     * Get the vendor type that owns the stock.
+     */
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class, 'get_vendor_id');
     }
 }

@@ -14,11 +14,16 @@ return new class extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->id();
 
+            $table->decimal('vendor_value', $precision = 15, $scale = 2);
+
             $table->unsignedBigInteger('get_product_id');
             $table->foreign('get_product_id')->references('id')->on('products')->onDelete('cascade');
 
             $table->unsignedBigInteger('get_brand_id');
             $table->foreign('get_brand_id')->references('id')->on('brands')->onDelete('cascade');
+
+            $table->unsignedBigInteger('get_vendor_id');
+            $table->foreign('get_vendor_id')->references('id')->on('vendors')->onDelete('cascade');
 
             // $table->unique(['get_product_id', 'get_brand_id']);
 

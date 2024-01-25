@@ -9,12 +9,15 @@
             </a>
         </li>
 
-        <x-nav.aside-item title="Estoque" uniqueId="stock-nav" parentId="sidebar-nav"
-        icon="bi bi-layout-text-window-reverse" activeRoutes="{{ '' }}">
-            <x-nav.aside-sub-item title="Dados" url="#" class="{{ isActive('#') }}"/>
-        </x-nav.aside-item>
-
         @hasanyrole('Administrador|Gerente')
+            {{-- Nav estoque --}}
+            <x-nav.aside-item title="Estoque" uniqueId="stock-nav" parentId="sidebar-nav"
+            icon="bi bi-layout-text-window-reverse" activeRoutes="{{ 'stocks.*' }}">
+                @can('Listar estoques')
+                <x-nav.aside-sub-item title="Listar" url="{{ route('stocks.index') }}" class="{{ isActive('stocks.index') }}"/>
+                @endcan
+            </x-nav.aside-item>
+
             {{-- Nav clientes --}}
             <x-nav.aside-item title="Clientes" uniqueId="customers-nav" parentId="sidebar-nav"
             icon="bi bi-person-lines-fill" activeRoutes="{{ 'customers.*' }}">

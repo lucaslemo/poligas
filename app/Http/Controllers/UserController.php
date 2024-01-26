@@ -24,7 +24,7 @@ class UserController extends Controller
                 $request->delivery_men_from_manger_id
                 ? trim($request->delivery_men_from_manger_id)
                 : null;
-                
+
             $users = User::select()
                 ->when($role, function($query) use($role) {
                     $query->where('type', $role);
@@ -48,11 +48,14 @@ class UserController extends Controller
                 ->addColumn('detachButton', function ($user) {
                     return view('users.partials.detachButton', ['user' => $user]);
                 })
-                ->addColumn('assign_at', function ($user) {
-                    $assign_at = isset($user->managers[0])
-                        ? $user->managers[0]->pivot->created_at
-                        : null;
-                    return $assign_at;
+                ->addColumn('assign_at', function ($user) use($id) {
+                    try {
+                        return $user->managers->first(function($manger) use($id) {
+                            return $manger->id == $id;
+                        })->pivot->created_at;
+                    } catch (\Throwable $th) {
+                        return null;
+                    }
                 })
                 ->filterColumn('full_name', function($query, $keyword) {
                     $sql = "CONCAT(users.first_name,' ',users.last_name) like ?";

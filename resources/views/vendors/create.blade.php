@@ -123,35 +123,37 @@
     @push('scripts')
     <script type="text/javascript">
 
-        $('#zipCodeInput').blur(function() {
-            const zipCode = $(this).val().replace(/[^0-9]/, "");
-            if (zipCode.length == 8) {
-                const urlSearchZipCode = `https://viacep.com.br/ws/${zipCode}/json/`;
-                $.ajax({
-                    url: urlSearchZipCode,
-                    method: 'GET',
-                    dataType: 'json',
-                    crossDomain: true,
-                    contentType: 'application/json',
-                    success: function(response) {
-                        try{
-                            $('#streetInput').val(response.logradouro);
-                            $('#numberInput').val(response.siafi);
-                            $('#complementInput').val(response.complemento);
-                            $('#neighborhoodInput').val(response.bairro);
-                            $('#cityInput').val(response.localidade);
-                            $('#stateInput').val(translateStates(response.uf));
-                            $('.toggle-focus').addClass("customFocusedInput")
-                            setTimeout(function() { $('.toggle-focus').removeClass("customFocusedInput") }, 2000)
-                        } catch(error) {
-                            console.error(error);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr);
-                    },
-                });
-            }
+        $(document).ready(function() {
+            $('#zipCodeInput').blur(function() {
+                const zipCode = $(this).val().replace(/[^0-9]/, "");
+                if (zipCode.length == 8) {
+                    const urlSearchZipCode = `https://viacep.com.br/ws/${zipCode}/json/`;
+                    $.ajax({
+                        url: urlSearchZipCode,
+                        method: 'GET',
+                        dataType: 'json',
+                        crossDomain: true,
+                        contentType: 'application/json',
+                        success: function(response) {
+                            try{
+                                $('#streetInput').val(response.logradouro);
+                                $('#numberInput').val(response.siafi);
+                                $('#complementInput').val(response.complemento);
+                                $('#neighborhoodInput').val(response.bairro);
+                                $('#cityInput').val(response.localidade);
+                                $('#stateInput').val(translateStates(response.uf));
+                                $('.toggle-focus').addClass("customFocusedInput")
+                                setTimeout(function() { $('.toggle-focus').removeClass("customFocusedInput") }, 2000)
+                            } catch(error) {
+                                console.error(error);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr);
+                        },
+                    });
+                }
+            });
         });
 
     </script>

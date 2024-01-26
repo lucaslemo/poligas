@@ -73,13 +73,7 @@
                         searchable: false,
                         render: function(data, type, full, meta) {
                             var created_at = new Date(data);
-                            var formatted_date = created_at.toLocaleString('pt-BR', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
+                            var formatted_date = formatDateForDatatable(created_at);
                             return `<small class="text-secondary">registrado em: <span class="fw-bold">${formatted_date}</span></small>`;
                         }
                     },

@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            @if($user->hasRole('Gerente'))
+            @if($user->hasAnyRole(['Administrador', 'Gerente']))
 
             <div id="clientMessages"></div>
 
@@ -127,8 +127,7 @@
         </section>
     </main>
 
-    @if($user->hasAnyRole(['Gerente', 'Entregador']))
-    @if($user->hasRole('Gerente'))
+    @if($user->hasAnyRole(['Administrador', 'Gerente']))
     @push('scripts')
         <script type="text/javascript">
             $(document).ready(function() {
@@ -257,6 +256,5 @@
             });
         </script>
     @endpush
-    @endif
     @endif
 </x-app>

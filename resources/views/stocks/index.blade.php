@@ -76,6 +76,7 @@
                 $('#stocksDataTable thead th:eq(2)').html(isChecked ? 'Marca' : 'Quantidade em estoque');
                 $('#stocksDataTable thead th:eq(3)').html(isChecked ? 'Fornecedor' : 'Marcas e fornecedores');
                 $('#stocksDataTable tbody').empty();
+                $('#stocksDataTable tfoot').empty();
 
                 const dataFormatFunction = (data, type, full, meta) => {
                     const created_at = new Date(data);
@@ -111,28 +112,19 @@
                         url: routeStocksDataTable,
                         data: {type: type},
                     },
-                    initComplete: function(settings, json) {
-                        if (!isChecked) {
-                            const api = this.api();
-                            const tr = api.rows(function(idx, data, node) {
-                                return data.name === 'Total';
-                            });
-                            // $(api.table().node()).append(
-                            //     $('<tfoot></tfoot>').html(tr.nodes())
-                            // );
-                            // tr.remove();
-                        }
-                    },
                     drawCallback: function(settings) {
                         if (!isChecked) {
                             const api = this.api();
                             const tr = api.rows(function(idx, data, node) {
                                 return data.name === 'Total';
                             });
-                            // $(api.table().node()).append(
-                            //     $('<tfoot></tfoot>').html(tr.nodes())
-                            // );
-                            // tr.remove();
+                            if (tr) {
+                                $('#stocksDataTable tfoot').empty();
+                                $(api.table().node()).append(
+                                    $('<tfoot></tfoot>').html(tr.nodes())
+                                );
+                                tr.remove();
+                            }
                         }
                     },
                     "columns": columns,

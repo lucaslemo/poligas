@@ -96,11 +96,13 @@
     @push('scripts')
 
         <script type="text/javascript">
-         $(document).ready(function() {
-            $('#deleteAddressButton').on('click', function() {
-                $('#deleteAddressForm').submit();
+
+            $(document).ready(function() {
+                $('#deleteAddressButton').on('click', function() {
+                    $('#deleteAddressForm').submit();
+                });
             });
-         });
+            
         </script>
 
     @endpush

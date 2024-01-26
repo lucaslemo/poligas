@@ -42,6 +42,7 @@
                                         <th scope="col">Produto</th>
                                         <th scope="col">Quantidade em estoque</th>
                                         <th scope="col">Marcas e fornecedores</th>
+                                        <th scope="col">Valor de compra</th>
                                         <th scope="col">Registro</th>
                                     </tr>
                                 </thead>
@@ -91,6 +92,7 @@
                             {data: 'product.name', name: 'product.name'},
                             {data: 'brand.name', name: 'brand.name'},
                             {data: 'vendor.name', name: 'vendor.name'},
+                            {data: 'vendor_value', name: 'vendor_value', render: (data) => formatMoney(data)},
                             {data: 'created_at', name: 'created_at', width: '30%', orderable: false, searchable: false, render: dataFormatFunction},
                         ]
                     :   [
@@ -98,6 +100,7 @@
                             {data: 'name', name: 'name'},
                             {data: 'product_count', name: 'product_count'},
                             {data: 'brands_and_vendors', name: 'brands_and_vendors', orderable: false, searchable: false},
+                            {data: 'value_sum', name: 'value_sum', render: (data) => formatMoney(data)},
                             {data: 'latest_stock', name: 'latest_stock', width: '30%', orderable: false, searchable: false, render: dataFormatFunction},
                         ];
 

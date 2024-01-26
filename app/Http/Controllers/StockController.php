@@ -92,6 +92,7 @@ class StockController extends Controller
                 DB::raw('COUNT(stocks.get_product_id) AS product_count'),
                 DB::raw('COUNT(DISTINCT stocks.get_brand_id) AS brand_count'),
                 DB::raw('COUNT(DISTINCT stocks.get_vendor_id) AS vendor_count'),
+                DB::raw('SUM(stocks.vendor_value) AS value_sum'),
                 DB::raw('MAX(stocks.created_at) AS latest_stock'),
             ])
             ->leftJoin('products', 'stocks.get_product_id', '=', 'products.id')
@@ -118,10 +119,19 @@ class StockController extends Controller
             })
             ->filterColumn('product_count', function($query, $keyword) {
                 $sql = "EXISTS (
-                    SELECT COUNT(stocks.get_product_id)
+                    SELECT COUNT(sub_stocks.get_product_id)
                     FROM stocks AS sub_stocks
                     WHERE sub_stocks.get_product_id = stocks.get_product_id
-                    GROUP BY stocks.get_product_id HAVING COUNT(stocks.get_product_id) LIKE ?
+                    GROUP BY sub_stocks.get_product_id HAVING COUNT(sub_stocks.get_product_id) LIKE ?
+                )";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+            })
+            ->filterColumn('value_sum', function($query, $keyword) {
+                $sql = "EXISTS (
+                    SELECT SUM(sub_stocks.vendor_value)
+                    FROM stocks AS sub_stocks
+                    WHERE sub_stocks.get_product_id = stocks.get_product_id
+                    GROUP BY sub_stocks.get_product_id HAVING SUM(sub_stocks.vendor_value) LIKE ?
                 )";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })

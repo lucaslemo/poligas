@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PermissionsSeeder::class,
             UserSeeder::class,
             ProductSeeder::class,
+            PaymentTypeSeeder::class,
         ]);
 
         // Seeders apenas para desenvolvimento

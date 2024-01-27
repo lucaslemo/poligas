@@ -19,10 +19,25 @@ class Stock extends Model
      */
     protected $fillable = [
         'vendor_value',
+        'status',
         'get_product_id',
         'get_brand_id',
         'get_vendor_id',
     ];
+
+    public function statusFormatted(): string
+    {
+        switch ($this->status) {
+            case 'available':
+                return 'Disponível';
+            case 'unavailable':
+                return 'Indisponível';
+            case 'sold':
+                return 'Vendido';
+            default:
+                return '-';
+        }
+    }
 
     /**
      * Log all attributes on the model

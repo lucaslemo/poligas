@@ -16,6 +16,9 @@
                 @can('Listar estoques')
                 <x-nav.aside-sub-item title="Listar" url="{{ route('stocks.index') }}" class="{{ isActive('stocks.index') }}"/>
                 @endcan
+                @can('Cadastrar estoque')
+                <x-nav.aside-sub-item title="Cadastrar" url="{{ route('stocks.create') }}" class="{{ isActive('stocks.create') }}"/>
+                @endcan
             </x-nav.aside-item>
 
             {{-- Nav clientes --}}

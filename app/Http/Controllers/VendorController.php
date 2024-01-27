@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Response;
 
 class VendorController extends Controller
 {
@@ -33,6 +34,43 @@ class VendorController extends Controller
                     return $vendor->addresses()->count();
                 })
                 ->make(true);
+        }
+    }
+
+    /**
+     * Get records.
+     */
+    public function getVendors(Request $request)
+    {
+        if ($request->ajax()) {
+            $term = trim($request->term);
+            $vendors = Vendor::select('id',  'name AS text')
+                ->where(function($query) use($term) {
+                    $sql = "name like ?";
+                    $query->whereRaw($sql, ["%{$term}%"]);
+                })
+                ->orderBy('name', 'asc')
+                ->simplePaginate(10);
+            $morePages = true;
+            if (empty($vendors->nextPageUrl())) {
+                $morePages = false;
+            }
+            $results = array(
+                "results" => $vendors->items(),
+                "pagination" => ["more" => $morePages]
+            );
+            return Response::json($results);
+        }
+    }
+
+    /**
+     * Get record by id.
+     */
+    public function getVendor(Request $request, string $id)
+    {
+        if ($request->ajax()) {
+            $vendor = Vendor::findOrFail($id);
+            return Response::json($vendor);
         }
     }
 

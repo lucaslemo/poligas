@@ -222,6 +222,11 @@ return [
         'number' => 'número',
         'neighborhood' => 'bairro',
         'phone_number' => 'telefone',
+        'get_product_id' => 'produto',
+        'get_brand_id' => 'marca',
+        'get_vendor_id' => 'fornecedor',
+        'quantity' => 'quantidade',
+        'vendor_value' => 'valor unitário',
 
     ],
 

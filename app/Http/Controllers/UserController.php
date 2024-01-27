@@ -76,9 +76,9 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $term = trim($request->term);
-            $users = User::select('id',  DB::raw("CONCAT(first_name, ' ', last_name) as text"))
+            $users = User::select('id',  DB::raw("CONCAT(first_name, ' ', last_name) AS text"))
                 ->where(function($query) use($term) {
-                    $sql = "CONCAT(users.first_name,'-',users.last_name) like ?";
+                    $sql = "CONCAT(users.first_name,' ',users.last_name) like ?";
                     $query->whereRaw($sql, ["%{$term}%"]);
                 })
                 ->when($role, function($query) use($role) {

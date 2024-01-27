@@ -34,7 +34,7 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
             $term = trim($request->term);
-            $products = Product::select('id',  'name as text')
+            $products = Product::select('id',  'name AS text')
                 ->where(function($query) use($term) {
                     $sql = "name like ?";
                     $query->whereRaw($sql, ["%{$term}%"]);
@@ -50,6 +50,17 @@ class ProductController extends Controller
                 "pagination" => ["more" => $morePages]
             );
             return Response::json($results);
+        }
+    }
+
+    /**
+     * Get record by id.
+     */
+    public function getProduct(Request $request, string $id)
+    {
+        if ($request->ajax()) {
+            $product = Product::findOrFail($id);
+            return Response::json($product);
         }
     }
 

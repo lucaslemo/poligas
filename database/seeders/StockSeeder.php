@@ -21,22 +21,24 @@ class StockSeeder extends Seeder
         DB::table('stocks')->delete();
 
         $vendors = Vendor::get();
-        foreach($vendors as $vendor) {
-            $productsQty = fake()->randomDigitNotNull();
-            $product = Product::inRandomOrder()->first();
-            $brand = Brand::inRandomOrder()->first();
-            $value = fake()->randomFloat(2, 100, 300);
-            $date = Carbon::now()->subMinutes(rand(1, 21600));
-            for($i = 0; $i < $productsQty; $i++) {
-                Stock::factory()
-                    ->for($product)
-                    ->for($brand)
-                    ->for($vendor)
-                    ->create([
-                        'vendor_value' => $value,
-                        'created_at' => $date,
-                        'updated_at' => $date,
-                    ]);
+        for($j = 0; $j < 5; $j++) {
+            foreach($vendors as $vendor) {
+                $productsQty = fake()->randomDigitNotNull() * 3;
+                $product = Product::inRandomOrder()->first();
+                $brand = Brand::inRandomOrder()->first();
+                $value = fake()->randomFloat(2, 100, 300);
+                $date = Carbon::now()->subMinutes(rand(1, 21600));
+                for($i = 0; $i < $productsQty; $i++) {
+                    Stock::factory()
+                        ->for($product)
+                        ->for($brand)
+                        ->for($vendor)
+                        ->create([
+                            'vendor_value' => $value,
+                            'created_at' => $date,
+                            'updated_at' => $date,
+                        ]);
+                }
             }
         }
     }

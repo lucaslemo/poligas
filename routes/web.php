@@ -34,14 +34,20 @@ Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function 
 
     // Vendors
     Route::get('/vendors/load', [VendorController::class, 'loadDataTable'])->name('vendors.load');
+    Route::get('/vendors/getVendors', [VendorController::class, 'getVendors'])->name('vendors.getVendors');
+    Route::get('/vendors/{id}/getVendor', [VendorController::class, 'getVendor'])->name('vendors.getVendor');
     Route::resource('/vendors', VendorController::class)->except(['show', 'destroy']);
 
     // Brands
     Route::get('/brands/load', [BrandController::class, 'loadDataTable'])->name('brands.load');
+    Route::get('/brands/getBrands', [BrandController::class, 'getBrands'])->name('brands.getBrands');
+    Route::get('/brands/{id}/getBrand', [BrandController::class, 'getBrand'])->name('brands.getBrand');
     Route::resource('/brands', BrandController::class)->except(['show', 'destroy']);
 
     // Products
     Route::get('/products/load', [ProductController::class, 'loadDataTable'])->name('products.load');
+    Route::get('/products/getProducts', [ProductController::class, 'getProducts'])->name('products.getProducts');
+    Route::get('/products/{id}/getProduct', [ProductController::class, 'getProduct'])->name('products.getProduct');
     Route::resource('/products', ProductController::class)->except(['show', 'destroy']);
 
     // Address

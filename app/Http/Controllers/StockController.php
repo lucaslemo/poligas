@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Http\Requests\StockRequest;
 use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 use Yajra\DataTables\Facades\DataTables;
 
 class StockController extends Controller
@@ -38,15 +39,32 @@ class StockController extends Controller
      */
     public function create()
     {
-        //
+        return view('stocks.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StockRequest $request)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $qty = $request->quantity;
+
+            for($i = 0; $i < $qty; $i++) {
+                $stock = new Stock();
+                $stock->fill($request->validated());
+                $stock->save();
+            }
+
+            $message = $qty == 1 ? $qty . ' produto cadastrado' : $qty . ' produtos cadastrados';
+
+            DB::commit();
+            return Redirect::route('stocks.create')->with('status', $message . ' com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('stocks.create')->withErrors($th->getMessage());
+        }
     }
 
     /**
@@ -68,7 +86,7 @@ class StockController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StockRequest $request, string $id)
     {
         //
     }

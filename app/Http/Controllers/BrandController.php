@@ -34,7 +34,7 @@ class BrandController extends Controller
     {
         if ($request->ajax()) {
             $term = trim($request->term);
-            $brands = Brand::select('id',  'name as text')
+            $brands = Brand::select('id',  'name AS text')
                 ->where(function($query) use($term) {
                     $sql = "name like ?";
                     $query->whereRaw($sql, ["%{$term}%"]);
@@ -50,6 +50,17 @@ class BrandController extends Controller
                 "pagination" => ["more" => $morePages]
             );
             return Response::json($results);
+        }
+    }
+
+    /**
+     * Get record by id.
+     */
+    public function getBrand(Request $request, string $id)
+    {
+        if ($request->ajax()) {
+            $brand = Brand::findOrFail($id);
+            return Response::json($brand);
         }
     }
 

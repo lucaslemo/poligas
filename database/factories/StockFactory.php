@@ -20,6 +20,7 @@ class StockFactory extends Factory
         $date = Carbon::now()->subDays(rand(1, 15));
         return [
             'vendor_value' => fake()->randomFloat(2, 100, 300),
+            'status' => 'available',
             'created_at' => $date,
             'updated_at' => $date,
         ];

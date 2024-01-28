@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
                 VendorSeeder::class,
                 BrandSeeder::class,
                 StockSeeder::class,
+                SaleSeeder::class,
             ]);
         }
     }

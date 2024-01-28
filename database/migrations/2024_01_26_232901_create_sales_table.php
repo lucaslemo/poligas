@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
 
-            $table->string('sale_order');
-            $table->decimal('sale_value', $precision = 15, $scale = 2);
+            $table->decimal('total_value', $precision = 15, $scale = 2);
             $table->dateTime('payment_date')->nullable();
 
             $table->unsignedBigInteger('get_customer_id');

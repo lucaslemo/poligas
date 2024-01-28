@@ -23,6 +23,7 @@ class Stock extends Model
         'get_product_id',
         'get_brand_id',
         'get_vendor_id',
+        'get_sale_id',
     ];
 
     public function statusFormatted(): string
@@ -65,10 +66,23 @@ class Stock extends Model
     }
 
     /**
-     * Get the vendor type that owns the stock.
+     * Get the vendor that owns the stock.
      */
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class, 'get_vendor_id');
+    }
+
+    /**
+     * Get the sales for the stock.
+     */
+    public function sales()
+    {
+        return $this->belongsToMany(
+            Sale::class,
+            'sale_has_stocks',
+            'get_stock_id',
+            'get_sale_id',
+        )->withPivot(['sale_value']);
     }
 }

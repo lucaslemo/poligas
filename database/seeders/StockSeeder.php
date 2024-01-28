@@ -27,7 +27,7 @@ class StockSeeder extends Seeder
                 $product = Product::inRandomOrder()->first();
                 $brand = Brand::inRandomOrder()->first();
                 $value = fake()->randomFloat(2, 100, 300);
-                $date = Carbon::now()->subMinutes(rand(1, 21600));
+                $date = Carbon::now()->subMinutes(rand(1, 1440))->subDays(rand(1, 730));
                 for($i = 0; $i < $productsQty; $i++) {
                     Stock::factory()
                         ->for($product)

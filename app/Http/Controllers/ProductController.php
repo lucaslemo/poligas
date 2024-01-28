@@ -39,7 +39,7 @@ class ProductController extends Controller
                     $sql = "name like ?";
                     $query->whereRaw($sql, ["%{$term}%"]);
                 })
-                ->orderBy('name', 'asc')
+                ->orderBy('id', 'asc')
                 ->simplePaginate(10);
             $morePages = true;
             if (empty($products->nextPageUrl())) {

@@ -116,6 +116,7 @@ class StockController extends Controller
             ->leftJoin('products', 'stocks.get_product_id', '=', 'products.id')
             ->leftJoin('brands', 'stocks.get_brand_id', '=', 'brands.id')
             ->leftJoin('vendors', 'stocks.get_vendor_id', '=', 'vendors.id')
+            ->where('status', 'available')
             ->groupBy(DB::raw('id WITH ROLLUP'));
         return DataTables::of($stocks)
             ->editColumn('id', function($product) {
@@ -139,7 +140,7 @@ class StockController extends Controller
                 $sql = "EXISTS (
                     SELECT COUNT(sub_stocks.get_product_id)
                     FROM stocks AS sub_stocks
-                    WHERE sub_stocks.get_product_id = stocks.get_product_id
+                    WHERE sub_stocks.get_product_id = stocks.get_product_id AND sub_stocks.status = 'available'
                     GROUP BY sub_stocks.get_product_id HAVING COUNT(sub_stocks.get_product_id) LIKE ?
                 )";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
@@ -148,7 +149,7 @@ class StockController extends Controller
                 $sql = "EXISTS (
                     SELECT SUM(sub_stocks.vendor_value)
                     FROM stocks AS sub_stocks
-                    WHERE sub_stocks.get_product_id = stocks.get_product_id
+                    WHERE sub_stocks.get_product_id = stocks.get_product_id AND sub_stocks.status = 'available'
                     GROUP BY sub_stocks.get_product_id HAVING SUM(sub_stocks.vendor_value) LIKE ?
                 )";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
@@ -160,7 +161,7 @@ class StockController extends Controller
      * Mount the datatable for stocks.
      */
     private function datatableDetailed() {
-        $stocks = Stock::with(['product', 'brand', 'vendor']);
+        $stocks = Stock::where('status', 'available')->with(['product', 'brand', 'vendor']);
         return DataTables::eloquent($stocks)->make(true);
     }
 }

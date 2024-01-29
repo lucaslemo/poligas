@@ -31,7 +31,8 @@ Route::get('/', function () {
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
     // Sales
     Route::get('/sales/load', [SaleController::class, 'loadDataTable'])->name('sales.load');
-    Route::get('/sales/{filter}/info', [SaleController::class, 'info'])->name('sales.info');
+    Route::get('/sales/{filter}/loadCard', [SaleController::class, 'loadCard'])->name('sales.loadCard');
+    Route::get('/sales/{filter}/loadChart', [SaleController::class, 'loadChart'])->name('sales.loadChart');
     Route::resource('/sales', SaleController::class);
 
     // Stocks

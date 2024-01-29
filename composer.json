@@ -35,7 +35,8 @@
             "app/Helpers/isActive.php",
             "app/Helpers/formatCnpjCpf.php",
             "app/Helpers/formatPhoneNumber.php",
-            "app/Helpers/formatZipCode.php"
+            "app/Helpers/formatZipCode.php",
+            "app/Helpers/getDatesFilter.php"
         ]
     },
     "autoload-dev": {

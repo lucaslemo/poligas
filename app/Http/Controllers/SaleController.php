@@ -16,7 +16,14 @@ class SaleController extends Controller
     public function loadDataTable(Request $request)
     {
         if ($request->ajax()) {
+            $filter = $request->filter ? trim($request->filter) : null;
+
             $sales = Sale::with(['customer', 'user', 'deliveryman', 'paymentType'])
+                ->when($filter, function($query) use($filter) {
+                    $dates = json_decode(getDatesFilter($filter));
+                    $query->whereDate('created_at', '>=', $dates->current->start);
+                    $query->whereDate('created_at', '<=', $dates->current->finish);
+                })
                 ->whereHas('stocks', function($query) {
                     $query->where('status', 'sold');
                 });
@@ -25,40 +32,63 @@ class SaleController extends Controller
     }
 
     /**
-     * Info ajax.
+     * Card.
      */
-    public function info(Request $request, string $filter)
+    public function loadCard(Request $request, string $filter)
     {
         if ($request->ajax()) {
-            $data = [];
-            switch ($filter) {
-                case 'today':
-                    $today = Sale::whereDate('created_at', Carbon::now()->toDateString())->count();
-                    $yesterday = Sale::whereDate('created_at', Carbon::now()->subDay()->toDateString())->count();
-                    $data = ['current' => $today, 'latest' => $yesterday];
-                    break;
-                case 'month':
-                    $month = Sale::whereDate('created_at', '>=', Carbon::now()->startOfMonth()->toDateString())
-                        ->whereDate('created_at', '<=', Carbon::now()->endOfMonth()->toDateString())->count();
-
-                    $lastMonth = Sale::whereDate('created_at', '>=', Carbon::now()->subMonth()->startOfMonth()->toDateString())
-                        ->whereDate('created_at', '<=', Carbon::now()->subMonth()->endOfMonth()->toDateString())->count();
-                    $data = ['current' => $month, 'latest' => $lastMonth];
-                    break;
-                case 'year':
-                    $year = Sale::whereDate('created_at', '>=', Carbon::now()->startOfYear()->toDateString())
-                        ->whereDate('created_at', '<=', Carbon::now()->endOfYear()->toDateString())->count();
-                    $lastYear = Sale::whereDate('created_at', '>=', Carbon::now()->subYear()->startOfYear()->toDateString())
-                        ->whereDate('created_at', '<=', Carbon::now()->subYear()->endOfYear()->toDateString())->count();
-                    $data = ['current' => $year, 'latest' => $lastYear];
-                    break;
-            }
+            $dates = json_decode(getDatesFilter($filter));
+            $current = Sale::whereDate('created_at', '>=', $dates->current->start)->whereDate('created_at', '<=', $dates->current->finish)->count();
+            $previous = Sale::whereDate('created_at', '>=', $dates->previous->start)->whereDate('created_at', '<=', $dates->previous->finish)->count();
             $results = [
-                'total' => $data['current'],
-                'diference' => $data['current'] - $data['latest'],
-                'diferencePercentage' => (($data['current'] - $data['latest']) / $data['latest']) * 100
+                'total' => $current,
+                'diference' => $current - $previous,
+                'diferencePercentage' => $previous != 0 ? (($current - $previous) / $previous) * 100 : 0,
             ];
             return Response::json($results);
+        }
+    }
+
+    /**
+     * Card.
+     */
+    public function loadChart(Request $request, string $filter)
+    {
+        if ($request->ajax()) {
+            $dates = json_decode(getDatesFilter($filter));
+            $sales = Sale::whereDate('created_at', '>=', $dates->current->start)->whereDate('created_at', '<=', $dates->current->finish)
+                ->orderBy('created_at')->get();
+            $data = [];
+            $series = [];
+            $categories = [];
+
+            foreach($sales as $sale) {
+                $label = '';
+                if ($filter == 'today') {
+                    $label = Carbon::parse($sale->created_at)->format('H:i');
+                } else if ($filter == 'month') {
+                    $label = Carbon::parse($sale->created_at)->day;
+                } else if ($filter == 'year') {
+                    $label = ucfirst(Carbon::parse($sale->created_at)->monthName);
+                }
+                isset($data[$label]) ? $data[$label] += 1 : $data[$label] = 1;
+            }
+
+            foreach($data as $key => $value){
+                $series[] = $value;
+                $categories[] = $key;
+            }
+
+            $label = '';
+            if ($filter == 'today') {
+                $label = 'Horários';
+            } else if ($filter == 'month') {
+                $label = 'Dias de ' . ucfirst(Carbon::now()->monthName);
+            } else if ($filter == 'year') {
+                $label = 'Meses de ' . ucfirst(Carbon::now()->year);
+            }
+
+            return Response::json(['series' => $series, 'categories' => $categories, 'label' => $label]);
         }
     }
 

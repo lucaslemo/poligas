@@ -18,9 +18,18 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="row">
-                        <x-dashboards.card id="salesCard" title="Vendas" icon="bi bi-cart"
-                        customClass="card info-card sales-card" dataUrl="sales.info" />
+                        <div class="col-xxl-4 col-md-6">
+                            <x-dashboards.card id="salesCard" title="Vendas" icon="bi bi-cart"
+                            customClass="card info-card sales-card" dataUrl="sales.loadCard" />
+                        </div>
 
+                        <div class="col-12">
+                            @include('dashboard.partials.reportsChart')
+                        </div>
+
+                        <div class="col-12">
+                            @include('dashboard.partials.recenteSalesTable')
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4"></div>

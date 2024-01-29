@@ -10,6 +10,17 @@
         </li>
 
         @hasanyrole('Administrador|Gerente')
+            {{-- Nav vendas --}}
+            <x-nav.aside-item title="Vendas" uniqueId="sale-nav" parentId="sidebar-nav"
+            icon="bi bi-cart" activeRoutes="{{ 'sales.*' }}">
+                @can('Listar estoques')
+                <x-nav.aside-sub-item title="Listar" url="{{ route('sales.index') }}" class="{{ isActive('sales.index') }}"/>
+                @endcan
+                @can('Cadastrar estoque')
+                <x-nav.aside-sub-item title="Cadastrar" url="{{ route('sales.create') }}" class="{{ isActive('sales.create') }}"/>
+                @endcan
+            </x-nav.aside-item>
+
             {{-- Nav estoque --}}
             <x-nav.aside-item title="Estoque" uniqueId="stock-nav" parentId="sidebar-nav"
             icon="bi bi-layout-text-window-reverse" activeRoutes="{{ 'stocks.*' }}">

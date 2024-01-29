@@ -7,6 +7,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,11 @@ Route::get('/', function () {
 
 // Grupo de rotas para administradores e gerentes
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
+    // Sales
+    Route::get('/sales/load', [SaleController::class, 'loadDataTable'])->name('sales.load');
+    Route::get('/sales/{filter}/info', [SaleController::class, 'info'])->name('sales.info');
+    Route::resource('/sales', SaleController::class);
+
     // Stocks
     Route::get('/stocks/load', [StockController::class, 'loadDataTable'])->name('stocks.load');
     Route::resource('/stocks', StockController::class)->except(['edit', 'update']);

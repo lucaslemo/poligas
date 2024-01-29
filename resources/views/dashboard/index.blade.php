@@ -16,7 +16,14 @@
         </div>
         <section class="section dashboard">
             <div class="row">
-                
+                <div class="col-lg-8">
+                    <div class="row">
+                        <x-dashboards.card id="salesCard" title="Vendas" icon="bi bi-cart"
+                        customClass="card info-card sales-card" dataUrl="sales.info" />
+
+                    </div>
+                </div>
+                <div class="col-lg-4"></div>
             </div>
         </section>
     </main>

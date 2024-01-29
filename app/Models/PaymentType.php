@@ -25,7 +25,7 @@ class PaymentType extends Model
     /**
      * Interact with the payment type's name.
      */
-    protected function firstName(): Attribute
+    protected function name(): Attribute
     {
         return Attribute::make(
             get: fn (string $value) => ucfirst($value),

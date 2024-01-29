@@ -65,7 +65,7 @@ class Sale extends Model
      */
     public function paymentType(): BelongsTo
     {
-        return $this->belongsTo(Vendor::class, 'get_payment_type_id');
+        return $this->belongsTo(PaymentType::class, 'get_payment_type_id');
     }
 
     /**

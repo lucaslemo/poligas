@@ -1,36 +1,22 @@
-<div class="card recent-sales overflow-auto">
+<x-dashboards.cardWithFilters class="card recent-sales overflow-auto" title="Vendas recentes">
+    <table id="salesDataTable" class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Vendedor</th>
+                <th scope="col">Valor total</th>
+            </tr>
+        </thead>
+        <tbody>
 
-    <x-dashboards.filter id="tableFilter" />
-    <div class="card-body">
-        <h5 class="card-title">Vendas recentes <span id="labelFor-tableFilter-table" data-label="today">| Hoje</span></h5>
-        <table id="salesDataTable" class="table table-sm">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Cliente</th>
-                    <th scope="col">Vendedor</th>
-                    <th scope="col">Valor total</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
-    </div>
-</div>
+        </tbody>
+    </table>
+</x-dashboards.cardWithFilters>
 
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function() {
-        $(document).on('click', '.filterFor_tableFilter', function() {
-            const filter = $(this).data('filter');
-            const html =$(this).html();
-            $('#labelFor-tableFilter-table').data('label', filter);
-            $('#labelFor-tableFilter-table').html(`| ${html}`);
-            $('#labelFor-tableFilter-table').trigger('change');
-            $('#salesDataTable').DataTable().ajax.reload(null, false);
-        });
-
         const routeSalesDataTable = "{{ route('sales.load') }}";
         const tableSales = $('#salesDataTable').DataTable({
             searching: true,
@@ -41,7 +27,7 @@
             "ajax": {
                 url: routeSalesDataTable,
                 data: function(d) {
-                    d.filter = $('#labelFor-tableFilter-table').data('label');
+                    d.filter = $('#current_filter').val();
                 }
             },
             "columns": [
@@ -84,6 +70,11 @@
                 "loadingRecords": "Carregando...",
             },
         });
+
+        $('#current_filter').on('change', function() {
+            $('#salesDataTable').DataTable().ajax.reload(null, false);
+        });
     });
+
 </script>
 @endpush

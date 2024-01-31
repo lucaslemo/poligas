@@ -1,17 +1,11 @@
-<div class="card">
-
-    <x-dashboards.filter id="reportsChartFilter" />
-
-    <div class="card-body">
-        <h5 class="card-title">Informes <span id="labelFor-reportsChartFilter-chart" data-label="today">| Hoje</span></h5>
-        <div id="reportsChart"></div>
-    </div>
-
-</div>
+<x-dashboards.cardWithFilters title="Informes">
+    <div id="reportsChart"></div>
+</x-dashboards.cardWithFilters>
 
 @push('scripts')
     <script type="text/javascript">
-        $(document).ready(function() {
+
+        $(document).ready(async function() {
             const options = {
                 chart: {
                     height: 350,
@@ -45,22 +39,14 @@
                     text: 'Carregando...'
                 }
             }
-            var chart = new ApexCharts(document.querySelector("#reportsChart"), options);
-            chart.render();
+            const reportChart = new ApexCharts(document.querySelector("#reportsChart"), options);
+            reportChart.render();
 
-            $(document).on('click', '.filterFor_reportsChartFilter', function() {
-                const filter = $(this).data('filter');
-                const html =$(this).html();
-                $('#labelFor-reportsChartFilter-chart').data('label', filter);
-                $('#labelFor-reportsChartFilter-chart').html(`| ${html}`);
-                $('#labelFor-reportsChartFilter-chart').trigger('change');
-            });
-
-            $('#labelFor-reportsChartFilter-chart').on('change', async function() {
-                const filter = $(this).data('label');
+            $('#current_filter').on('change', function() {
+                const filter = $('#current_filter').val();
                 const route = "{{ route('sales.loadChart', ['filter' => ':filter', 'chartType' => 'reportChart']) }}".replace(':filter', filter);
-                $.getJSON(route, function(response) {
-                    chart.updateOptions({
+                $.get(route, function(response) {
+                    reportChart.updateOptions({
                         series: [{
                             name: 'Vendas',
                             data: response.series
@@ -83,7 +69,7 @@
                         }
                     });
                 });
-            }).trigger('change');
+            });
         });
     </script>
 @endpush

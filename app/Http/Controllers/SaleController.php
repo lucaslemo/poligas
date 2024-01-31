@@ -22,8 +22,8 @@ class SaleController extends Controller
             $sales = Sale::with(['customer', 'user', 'deliveryman', 'paymentType'])
                 ->when($filter, function($query) use($filter) {
                     $dates = json_decode(getDatesFilter($filter));
-                    $query->whereDate('created_at', '>=', $dates->current->start);
-                    $query->whereDate('created_at', '<=', $dates->current->finish);
+                    $query->whereDate('sales.created_at', '>=', $dates->current->start);
+                    $query->whereDate('sales.created_at', '<=', $dates->current->finish);
                 })
                 ->whereHas('stocks', function($query) {
                     $query->where('status', 'sold');
@@ -152,7 +152,7 @@ class SaleController extends Controller
 
         $label = '';
         if ($filter == 'today') {
-            $label = 'Horários';
+            $label = 'Horários de hoje';
         } else if ($filter == 'month') {
             $label = 'Dias de ' . ucfirst(Carbon::now()->monthName);
         } else if ($filter == 'year') {

@@ -1,11 +1,10 @@
-<div class="card">
+<div class="{{ $class ?? 'card' }}">
 
-    <x-dashboards.filter id="paymentTypesChartFilter" />
+    <x-dashboards.filter />
 
     <div class="card-body pb-0">
-      <h5 class="card-title">Vendas por tipos de pagamentos <span id="labelFor-paymentTypesChartFilter-chart" data-label="today">| Hoje</span></h5>
+      <h5 class="card-title">{{ $title }} <span class="filter_label">| Hoje</span></h5>
 
-      <div id="paymentTypeChart" style="min-height: 400px;" class="echart"></div>
-
+        {{ $slot }}
     </div>
 </div>

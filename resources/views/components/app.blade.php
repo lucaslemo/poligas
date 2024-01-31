@@ -5,7 +5,7 @@
         <x-slot:title>
             {{ $title }}
         </x-slot>
-    @endisset()
+    @endisset
 
     {{-- Header of the aplication --}}
     <x-header />

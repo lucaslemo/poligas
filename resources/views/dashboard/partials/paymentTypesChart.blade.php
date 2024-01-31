@@ -1,14 +1,7 @@
-<div class="card">
+<x-dashboards.cardWithFilters title="Vendas por tipos de pagamentos">
+    <div id="paymentTypeChart" style="min-height: 400px;" class="echart"></div>
+</x-dashboards.cardWithFilters>
 
-    <x-dashboards.filter id="paymentTypesChartFilter" />
-
-    <div class="card-body pb-0">
-      <h5 class="card-title">Vendas por tipos de pagamentos <span id="labelFor-paymentTypesChartFilter-chart" data-label="today">| Hoje</span></h5>
-
-      <div id="paymentTypeChart" style="min-height: 400px;" class="echart"></div>
-
-    </div>
-</div>
 
 @push('scripts')
     <script type="text/javascript">
@@ -44,16 +37,8 @@
             const paymentTypechart = echarts.init(document.querySelector("#paymentTypeChart"));
             paymentTypechart.setOption(options)
 
-            $(document).on('click', '.filterFor_paymentTypesChartFilter', function() {
-                const filter = $(this).data('filter');
-                const html =$(this).html();
-                $('#labelFor-paymentTypesChartFilter-chart').data('label', filter);
-                $('#labelFor-paymentTypesChartFilter-chart').html(`| ${html}`);
-                $('#labelFor-paymentTypesChartFilter-chart').trigger('change');
-            });
-
-            $('#labelFor-paymentTypesChartFilter-chart').on('change', function() {
-                const filter = $(this).data('label');
+            $('#current_filter').on('change', function() {
+                const filter = $('#current_filter').val();
                 const route = "{{ route('sales.loadChart', ['filter' => ':filter', 'chartType' => 'paymentTypeChart']) }}".replace(':filter', filter);
                 $.getJSON(route, function(response) {
                     paymentTypechart.setOption({
@@ -62,7 +47,7 @@
                         }]
                     })
                 });
-            }).trigger('change');
+            });
         });
     </script>
 @endpush

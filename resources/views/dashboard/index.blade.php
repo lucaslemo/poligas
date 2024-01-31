@@ -19,8 +19,8 @@
                 <div class="col-lg-8">
                     <div class="row">
                         <div class="col-xxl-4 col-md-6">
-                            <x-dashboards.card id="salesCard" title="Vendas" icon="bi bi-cart"
-                            customClass="card info-card sales-card" dataUrl="sales.loadCard" />
+                            <x-dashboards.cardDetails id="salesCard" title="Vendas" icon="bi bi-cart"
+                            class="card info-card sales-card" dataUrl="sales.loadCard" />
                         </div>
 
                         <div class="col-12">
@@ -38,4 +38,23 @@
             </div>
         </section>
     </main>
+    @push('scripts')
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $(document).on('click', '.filter_dashboard', function() {
+                const filter = $(this).data('filter');
+                const label = $(this).html();
+                $('#current_filter').val(filter);
+                $('.filter_label').html(`| ${label}`);
+                $('#current_filter').trigger('change');
+            });
+
+            $('#current_filter').on('change', function() {
+                salesCardUpdateAjax();
+            }).trigger('change');
+        });
+
+    </script>
+    @endpush
 </x-app>

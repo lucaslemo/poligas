@@ -32,7 +32,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4"></div>
+                <div class="col-lg-4">
+                    @include('dashboard.partials.paymentTypesChart')
+                </div>
             </div>
         </section>
     </main>

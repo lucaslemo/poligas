@@ -58,9 +58,8 @@
 
             $('#labelFor-reportsChartFilter-chart').on('change', async function() {
                 const filter = $(this).data('label');
-                const route = "{{ route('sales.loadChart', ':filter') }}".replace(':filter', filter);
+                const route = "{{ route('sales.loadChart', ['filter' => ':filter', 'chartType' => 'reportChart']) }}".replace(':filter', filter);
                 $.getJSON(route, function(response) {
-                    console.log(response)
                     chart.updateOptions({
                         series: [{
                             name: 'Vendas',
@@ -78,6 +77,9 @@
                                     cssClass: 'apexcharts-xaxis-title',
                                 },
                             }
+                        },
+                        noData: {
+                            text: 'Sem dados'
                         }
                     });
                 });

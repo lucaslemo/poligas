@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -50,45 +51,17 @@ class SaleController extends Controller
     }
 
     /**
-     * Card.
+     * Charts.
      */
-    public function loadChart(Request $request, string $filter)
+    public function loadChart(Request $request, string $filter, string $chartType)
     {
         if ($request->ajax()) {
-            $dates = json_decode(getDatesFilter($filter));
-            $sales = Sale::whereDate('created_at', '>=', $dates->current->start)->whereDate('created_at', '<=', $dates->current->finish)
-                ->orderBy('created_at')->get();
-            $data = [];
-            $series = [];
-            $categories = [];
-
-            foreach($sales as $sale) {
-                $label = '';
-                if ($filter == 'today') {
-                    $label = Carbon::parse($sale->created_at)->format('H:i');
-                } else if ($filter == 'month') {
-                    $label = Carbon::parse($sale->created_at)->day;
-                } else if ($filter == 'year') {
-                    $label = ucfirst(Carbon::parse($sale->created_at)->monthName);
-                }
-                isset($data[$label]) ? $data[$label] += 1 : $data[$label] = 1;
+            if ($chartType == 'reportChart') {
+                return $this->loadReportChart($filter);
             }
-
-            foreach($data as $key => $value){
-                $series[] = $value;
-                $categories[] = $key;
+            if ($chartType == 'paymentTypeChart') {
+                return $this->loadPaymentTypeChart($filter);
             }
-
-            $label = '';
-            if ($filter == 'today') {
-                $label = 'Horários';
-            } else if ($filter == 'month') {
-                $label = 'Dias de ' . ucfirst(Carbon::now()->monthName);
-            } else if ($filter == 'year') {
-                $label = 'Meses de ' . ucfirst(Carbon::now()->year);
-            }
-
-            return Response::json(['series' => $series, 'categories' => $categories, 'label' => $label]);
         }
     }
 
@@ -146,5 +119,71 @@ class SaleController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Report Chart.
+     */
+    private function loadReportChart(string $filter)
+    {
+        $dates = json_decode(getDatesFilter($filter));
+        $sales = Sale::whereDate('created_at', '>=', $dates->current->start)->whereDate('created_at', '<=', $dates->current->finish)
+            ->orderBy('created_at')->get();
+        $data = [];
+        $series = [];
+        $categories = [];
+
+        foreach($sales as $sale) {
+            $label = '';
+            if ($filter == 'today') {
+                $label = Carbon::parse($sale->created_at)->format('H:i');
+            } else if ($filter == 'month') {
+                $label = Carbon::parse($sale->created_at)->day;
+            } else if ($filter == 'year') {
+                $label = ucfirst(Carbon::parse($sale->created_at)->monthName);
+            }
+            isset($data[$label]) ? $data[$label] += 1 : $data[$label] = 1;
+        }
+
+        foreach($data as $key => $value){
+            $series[] = $value;
+            $categories[] = $key;
+        }
+
+        $label = '';
+        if ($filter == 'today') {
+            $label = 'Horários';
+        } else if ($filter == 'month') {
+            $label = 'Dias de ' . ucfirst(Carbon::now()->monthName);
+        } else if ($filter == 'year') {
+            $label = 'Meses de ' . ucfirst(Carbon::now()->year);
+        }
+
+        return Response::json(['series' => $series, 'categories' => $categories, 'label' => $label]);
+    }
+
+    /**
+     * Payment type Chart.
+     */
+    private function loadPaymentTypeChart(string $filter)
+    {
+        $dates = json_decode(getDatesFilter($filter));
+
+        $sales = DB::table('sales')
+            ->select([
+                'payment_types.name AS name',
+                DB::raw("COUNT(sales.id) AS value"),
+            ])
+            ->leftJoin('payment_types', 'sales.get_payment_type_id', '=', 'payment_types.id')
+            ->whereDate('sales.created_at', '>=', $dates->current->start)
+            ->whereDate('sales.created_at', '<=', $dates->current->finish)
+            ->groupBy('name')
+            ->get();
+
+        foreach($sales as $sale) {
+            $sale->name = $sale->name ? ucfirst($sale->name) : 'Sem pagamento';
+        }
+
+        return Response::json($sales);
     }
 }

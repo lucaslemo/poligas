@@ -7,6 +7,7 @@ use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Yajra\DataTables\Facades\DataTables;
 
 class StockController extends Controller
@@ -23,6 +24,31 @@ class StockController extends Controller
             } else if ($type == 'detailed') {
                 return $this->datatableDetailed();
             }
+        }
+    }
+
+    /**
+     * Info from product on stocks.
+     */
+    public function infoProductStocks(Request $request, string $product)
+    {
+        if ($request->ajax()) {
+            $stocks = DB::table('stocks')
+                ->select([
+                    DB::raw('COUNT(stocks.id) AS stocks_count'),
+                    DB::raw('COUNT(DISTINCT stocks.get_brand_id) AS brand_count'),
+                    DB::raw('COUNT(DISTINCT stocks.get_vendor_id) AS vendor_count'),
+                ])
+                ->leftJoin('products', 'stocks.get_product_id', '=', 'products.id')
+                ->where('status', 'available')
+                ->where('products.name', $product)
+                ->first();
+
+            return Response::json([
+                'stocks' => $stocks->stocks_count,
+                'brands' => $stocks->brand_count,
+                'vendors' => $stocks->vendor_count
+            ]);
         }
     }
 
@@ -114,8 +140,6 @@ class StockController extends Controller
                 DB::raw('MAX(stocks.created_at) AS latest_stock'),
             ])
             ->leftJoin('products', 'stocks.get_product_id', '=', 'products.id')
-            ->leftJoin('brands', 'stocks.get_brand_id', '=', 'brands.id')
-            ->leftJoin('vendors', 'stocks.get_vendor_id', '=', 'vendors.id')
             ->where('status', 'available')
             ->groupBy(DB::raw('id WITH ROLLUP'));
         return DataTables::of($stocks)

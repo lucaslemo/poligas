@@ -33,8 +33,21 @@ class BrandController extends Controller
     public function getBrands(Request $request)
     {
         if ($request->ajax()) {
-            $term = trim($request->term);
+            $term = $request->term ? trim($request->term) : null;
+            $filter = $request->filter ? trim($request->filter) : null;
+            $productId = $request->product_id ? trim($request->product_id) : null;
             $brands = Brand::select('id',  'name AS text')
+                ->when($filter == 'stocked' && $productId, function($query) use($productId) {
+                    $query->whereHas('stocks', function($query) use($productId) {
+                        $query->where('status', 'available');
+                        $query->where('get_product_id', $productId);
+                    });
+                })
+                ->when($filter == 'stocked', function($query) {
+                    $query->whereHas('stocks', function($query) {
+                        $query->where('status', 'available');
+                    });
+                })
                 ->where(function($query) use($term) {
                     $sql = "name like ?";
                     $query->whereRaw($sql, ["%{$term}%"]);

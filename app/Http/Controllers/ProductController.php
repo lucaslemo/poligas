@@ -33,8 +33,14 @@ class ProductController extends Controller
     public function getProducts(Request $request)
     {
         if ($request->ajax()) {
-            $term = trim($request->term);
+            $term = $request->term ? trim($request->term) : null;
+            $filter = $request->filter ? trim($request->filter) : null;
             $products = Product::select('id',  'name AS text')
+                ->when($filter == 'stocked', function($query) {
+                    $query->whereHas('stocks', function($query) {
+                        $query->where('status', 'available');
+                    });
+                })
                 ->where(function($query) use($term) {
                     $sql = "name like ?";
                     $query->whereRaw($sql, ["%{$term}%"]);

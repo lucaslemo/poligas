@@ -37,6 +37,7 @@ Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function 
 
     // Stocks
     Route::get('/stocks/load', [StockController::class, 'loadDataTable'])->name('stocks.load');
+    Route::get('/stocks/productStocks/{product}', [StockController::class, 'infoProductStocks'])->name('stocks.productStocks');
     Route::resource('/stocks', StockController::class)->except(['edit', 'update']);
 
     // Vendors

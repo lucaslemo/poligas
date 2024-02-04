@@ -6,6 +6,7 @@ use App\Http\Controllers\ACL\PermissionController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\StockController;
@@ -29,6 +30,10 @@ Route::get('/', function () {
 
 // Grupo de rotas para administradores e gerentes
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
+    // Vendas
+    Route::get('/prices/load', [PriceController::class, 'loadDataTable'])->name('prices.load');
+    Route::resource('/prices', PriceController::class);
+
     // Sales
     Route::get('/sales/load', [SaleController::class, 'loadDataTable'])->name('sales.load');
     Route::get('/sales/{filter}/loadCard', [SaleController::class, 'loadCard'])->name('sales.loadCard');
@@ -93,4 +98,4 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -64,7 +64,7 @@ class SaleSeeder extends Seeder
                 $productsQty = fake()->randomDigitNotNull() * 3;
 
                 for($i = 0; $i < $productsQty; $i++) {
-                    $stock = Stock::where('created_at', '>', $date)
+                    $stock = Stock::with('product')->where('created_at', '>', $date)
                         ->where('status', 'available')
                         ->orderBy('created_at')
                         ->first();
@@ -73,7 +73,7 @@ class SaleSeeder extends Seeder
 
                     if ($stock) {
                         // Atualiza preço
-                        $value = fake()->randomFloat(2, ceil($stock->vendor_value), 350);
+                        $value = $stock->product->prices()->latest()->first()->value;
                         $sale->total_value += $value;
                         $sale->save();
 

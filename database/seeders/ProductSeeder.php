@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Price;
 use App\Models\Product;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,9 +19,11 @@ class ProductSeeder extends Seeder
         $types = ['P2', 'P5', 'P13', 'P20', 'P45', 'P90'];
 
         foreach($types as $type) {
-            Product::factory()->create([
-                'name' => $type
-            ]);
+            Product::factory()
+                ->has(Price::factory())
+                ->create([
+                    'name' => $type
+                ]);
         }
     }
 }

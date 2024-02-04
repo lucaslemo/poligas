@@ -35,9 +35,15 @@ const formatDateForDatatable = (date) => {
     return date.toLocaleString('pt-BR', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'});
 }
 
-const formatMoney = (value) => {
-    const formatMoney = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-    return formatMoney.format(value);
+const formatMoney = (value, type='full') => {
+    if (type == 'full') {
+        const formatMoney = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+        return formatMoney.format(value);
+    }
+    if (type == 'strip') {
+        const formatMoney = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2});
+        return formatMoney.format(value);
+    }
 }
 
 // Masks

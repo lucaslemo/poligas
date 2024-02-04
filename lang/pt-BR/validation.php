@@ -227,6 +227,7 @@ return [
         'get_vendor_id' => 'fornecedor',
         'quantity' => 'quantidade',
         'vendor_value' => 'valor unitário',
+        'value' => 'valor',
 
     ],
 

@@ -49,4 +49,12 @@ class Product extends Model
     {
         return $this->hasMany(Stock::class, 'get_product_id');
     }
+
+    /**
+     * Get the prices for the product.
+     */
+    public function prices(): HasMany
+    {
+        return $this->hasMany(Price::class, 'get_product_id');
+    }
 }

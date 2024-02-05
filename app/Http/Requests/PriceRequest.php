@@ -24,7 +24,7 @@ class PriceRequest extends FormRequest
     {
         return [
             'get_product_id' => ['required', 'numeric'],
-            'value' => ['required', 'decimal:2'],
+            'value' => ['required', 'decimal:2', 'gt:0'],
         ];
     }
 

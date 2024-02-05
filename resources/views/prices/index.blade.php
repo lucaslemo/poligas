@@ -5,10 +5,10 @@
     <main id="main" class="main">
 
         <div class="modal fade" id="modalChangeUpdatePrice" tabindex="-1">
-            <form id="createPrice" action="{{ route('prices.store') }}" method="POST" accept-charset="utf-8"
-                enctype="multipart/form-data">
-                <div class="modal-dialog modal-dialog-centered modal-lg">
-                    <div class="modal-content">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <form id="createPrice" action="{{ route('prices.store') }}" method="POST" accept-charset="utf-8"
+                    enctype="multipart/form-data">
                         <div class="modal-header">
                             <h5 id="modalTitle" class="modal-title"></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -16,7 +16,8 @@
                         </div>
                         <div class="modal-body">
                             <div id="modalMessages"></div>
-                            <input id="productInput" name="get_product_id" type="hidden" value="{{ old('get_product_id') }}">
+                            <input id="productInput" name="get_product_id" type="hidden"
+                                value="{{ old('get_product_id') }}">
                             <div class="row my-3">
                                 <label for="valueInput" class="col-sm-2 col-form-label">Valor</label>
                                 <div class="col-sm-10">
@@ -32,9 +33,9 @@
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                             <button type="submit" class="btn btn-primary">Atualizar</button>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
 
         <div class="row d-flex justify-content-start mb-3">
@@ -101,27 +102,24 @@
                             width: '40%',
                         },
                         {
-                            data: 'prices',
-                            name: 'prices.value',
+                            data: 'value',
+                            name: 'value',
+
                             render: function(data, type, full, meta) {
-                                if (typeof data[0] === 'undefined') {
-                                    return '-';
-                                }
-                                return formatMoney(data[0].value);
+                                return data ? formatMoney(data) : '-';
                             }
                         },
                         {
-                            data: 'prices',
-                            name: 'prices.created_at',
+                            data: 'created_at',
+                            name: 'created_at',
                             orderable: false,
                             searchable: false,
                             render: function(data, type, full, meta) {
-                                if (typeof data[0] === 'undefined') {
-                                    return '-';
-                                }
-                                var created_at = new Date(data[0].created_at);
+                                var created_at = new Date(data);
                                 var formatted_date = formatDateForDatatable(created_at);
-                                return `<small class="text-secondary">registrado em: <span class="fw-bold">${formatted_date}</span></small>`;
+                                return data ?
+                                    `<small class="text-secondary">registrado em: <span class="fw-bold">${formatted_date}</span></small>` :
+                                    '-';
                             }
                         },
                         {

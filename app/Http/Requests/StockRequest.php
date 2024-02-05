@@ -28,7 +28,7 @@ class StockRequest extends FormRequest
             'get_brand_id' => ['required', 'numeric'],
             'get_vendor_id' => ['required', 'numeric'],
             'quantity' => ['required', 'numeric'],
-            'vendor_value' => ['required', 'decimal:2'],
+            'vendor_value' => ['required', 'decimal:2', 'gt:0'],
         ];
     }
 

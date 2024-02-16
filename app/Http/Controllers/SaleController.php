@@ -135,15 +135,34 @@ class SaleController extends Controller
         if ($sale->status == 'opened') {
             return view('sales.edit', compact('sale'));
         }
-        return Redirect::back()->withErrors('Essa venda já foi consolidada');
+        return Redirect::route('sales.index')->withErrors('Essa venda já foi consolidada');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(saleRequest $request, string $id)
     {
-        dd('update.sale');
+        try {
+            $sale = Sale::with('stocks')->findOrFail($id);
+            if ($sale->status == 'closed') {
+                throw new \Exception('Essa venda já foi consolidada');
+            }
+
+            $sale->fill($request->validated());
+            $sale->status = 'closed';
+            $sale->save();
+
+            foreach($sale->stocks as $stock) {
+                $stock->status = 'sold';
+                $stock->save();
+            }
+
+
+            return Redirect::route('sales.show', $sale->id)->with('status', 'Venda consolidada com sucesso.');
+        } catch (\Throwable $th) {
+            return Redirect::route('sales.index')->withErrors($th->getMessage());
+        }
     }
 
     /**
@@ -159,7 +178,7 @@ class SaleController extends Controller
      */
     public function assignStocks(SaleHasStocksRequest $request, string $id)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             try {
                 DB::beginTransaction();
                 $sale = Sale::findOrFail($id);
@@ -174,7 +193,7 @@ class SaleController extends Controller
                     throw new \Exception('Quantidade em estoque insuficiente');
                 }
 
-                foreach($stocks as $stock) {
+                foreach ($stocks as $stock) {
                     if ($stock->status != 'available') {
                         throw new \Exception('Erro ao adicionar os produtos');
                     }

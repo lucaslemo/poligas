@@ -25,6 +25,7 @@
                             <form id="editSaleForm" action="{{ route('sales.update', $sale->id) }}" class="row g-3"
                                 method="POST" accept-charset="utf-8" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
                                 <div class="row mb-3">
                                     <label for="productSelect" class="col-sm-2 col-form-label">
                                         Cliente
@@ -64,8 +65,7 @@
                                         <div class="col-sm-10">
                                             <div class="input-group">
                                                 <span class="input-group-text" id="money-addon">R$</span>
-                                                <input type="text" class="form-control money" id="valueInput"
-                                                    value="{{ old('value') }}" name="value" required>
+                                                <input type="text" class="form-control money" id="valueInput" name="value">
                                             </div>
                                         </div>
                                     </div>
@@ -73,8 +73,7 @@
                                     <div class="row mb-3">
                                         <label for="quantityInput" class="col-sm-2 col-form-label">Quantidade</label>
                                         <div class="col-sm-10">
-                                            <input type="number" class="form-control" id="quantityInput"
-                                                value="{{ old('quantity') ?? 1 }}" name="quantity" required>
+                                            <input type="number" class="form-control" id="quantityInput" name="quantity">
                                         </div>
                                     </div>
 
@@ -139,6 +138,14 @@
                             type: 'sale',
                             sale_id: "{{ $sale->id }}"
                         },
+                    },
+                    "drawCallback": function(settings) {
+                        if($('#saleStocksDataTable').DataTable().data().count() == 0){
+                            $('#second_hidden_layer').hide()
+                        } else {
+                            $('#first_hidden_layer').show();
+                            $('#second_hidden_layer').show()
+                        }
                     },
                     "columns": [{
                             data: 'id',

@@ -118,7 +118,7 @@ class BrandController extends Controller
      */
     public function show(string $id)
     {
-        //
+        dd('show.brand');
     }
 
     /**
@@ -155,6 +155,6 @@ class BrandController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        dd('destroy.brand');
     }
 }

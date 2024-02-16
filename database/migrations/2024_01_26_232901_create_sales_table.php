@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
+            $table->string('status')->default('opened');
 
-            $table->decimal('total_value', $precision = 15, $scale = 2);
+            $table->decimal('total_value', $precision = 15, $scale = 2)->default(0.00);
             $table->dateTime('payment_date')->nullable();
 
             $table->unsignedBigInteger('get_customer_id');

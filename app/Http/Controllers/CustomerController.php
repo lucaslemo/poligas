@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerController extends Controller
@@ -36,6 +37,43 @@ class CustomerController extends Controller
                     return $customer->addresses()->count();
                 })
                 ->make(true);
+        }
+    }
+
+    /**
+     * Get records.
+     */
+    public function getCustomers(Request $request)
+    {
+        if ($request->ajax()) {
+            $term = $request->term ? trim($request->term) : null;
+            $customers = Customer::select('id',  'name AS text')
+                ->where(function($query) use($term) {
+                    $sql = "name like ?";
+                    $query->whereRaw($sql, ["%{$term}%"]);
+                })
+                ->orderBy('name', 'asc')
+                ->simplePaginate(10);
+            $morePages = true;
+            if (empty($customers->nextPageUrl())) {
+                $morePages = false;
+            }
+            $results = array(
+                "results" => $customers->items(),
+                "pagination" => ["more" => $morePages]
+            );
+            return Response::json($results);
+        }
+    }
+
+    /**
+     * Get record by id.
+     */
+    public function getCustomer(Request $request, string $id)
+    {
+        if ($request->ajax()) {
+            $customer = Customer::findOrFail($id);
+            return Response::json($customer);
         }
     }
 

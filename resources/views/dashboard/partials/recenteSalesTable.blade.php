@@ -28,6 +28,7 @@
                 url: routeSalesDataTable,
                 data: function(d) {
                     d.filter = $('#current_filter').val();
+                    d.status = 'closed';
                 }
             },
             "columns": [

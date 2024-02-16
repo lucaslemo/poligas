@@ -60,7 +60,7 @@ class PriceController extends Controller
      */
     public function create()
     {
-        //
+        dd('create.price');
     }
 
     /**
@@ -97,7 +97,7 @@ class PriceController extends Controller
      */
     public function show(string $id)
     {
-        //
+        dd('show.price');
     }
 
     /**
@@ -105,7 +105,7 @@ class PriceController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        dd('edit.price');
     }
 
     /**
@@ -113,7 +113,7 @@ class PriceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        dd('update.price');
     }
 
     /**
@@ -121,6 +121,6 @@ class PriceController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        dd('destroy.price');
     }
 }

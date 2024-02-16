@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StockRequest;
+use App\Models\Product;
+use App\Models\Sale;
 use App\Models\Stock;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,10 +21,13 @@ class StockController extends Controller
     {
         if ($request->ajax()) {
             $type = $request->type ? trim($request->type) : null;
+            $saleId = $request->sale_id ? trim($request->sale_id) : null;
             if ($type == 'general') {
                 return $this->datatableGeneral();
             } else if ($type == 'detailed') {
                 return $this->datatableDetailed();
+            } else if ($type == 'sale') {
+                return $this->datatableSale($saleId ?? 0);
             }
         }
     }
@@ -44,10 +49,15 @@ class StockController extends Controller
                 ->where('products.name', $product)
                 ->first();
 
+            $productModel = Product::with(['prices' => function($query) {
+                $query->latest();
+            }])->where('name', $product)->first();
+
             return Response::json([
                 'stocks' => $stocks->stocks_count,
                 'brands' => $stocks->brand_count,
-                'vendors' => $stocks->vendor_count
+                'vendors' => $stocks->vendor_count,
+                'value' => $productModel && isset($productModel->prices[0]) ? $productModel->prices[0]->value : null,
             ]);
         }
     }
@@ -98,7 +108,7 @@ class StockController extends Controller
      */
     public function show(string $id)
     {
-        //
+        dd('show.stock');
     }
 
     /**
@@ -106,7 +116,7 @@ class StockController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        dd('edit.stock');
     }
 
     /**
@@ -114,7 +124,7 @@ class StockController extends Controller
      */
     public function update(StockRequest $request, string $id)
     {
-        //
+        dd('update.stock');
     }
 
     /**
@@ -122,7 +132,40 @@ class StockController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        dd('destroy.stock');
+    }
+
+    /**
+     * Update the assign deliveryman.
+     */
+    public function unassignSale(Request $request, string $id)
+    {
+        if($request->ajax()) {
+            try {
+
+                $request->validate([
+                    'sale_id' => ['required', 'numeric']
+                ]);
+
+                DB::beginTransaction();
+                $stock = Stock::with('sales')->findOrFail($id);
+
+                $sale = Sale::findOrFail($request->sale_id);
+                $sale->total_value -= $stock->sales[0]->pivot->sale_value;
+                $sale->save();
+
+                $stock->status = 'available';
+                $stock->save();
+
+                $stock->sales()->detach($request->sale_id);
+
+                DB::commit();
+                return response()->json(['message' => 'Produto adicionado com sucesso.']);
+            } catch (\Throwable $th) {
+                DB::rollback();
+                return response()->json(['error' => $th->getMessage()], 500);
+            }
+        }
     }
 
     /**
@@ -187,5 +230,20 @@ class StockController extends Controller
     private function datatableDetailed() {
         $stocks = Stock::where('status', 'available')->with(['product', 'brand', 'vendor']);
         return DataTables::eloquent($stocks)->make(true);
+    }
+
+    /**
+     * Mount the datatable for stocks.
+     */
+    private function datatableSale(string $id) {
+        $stocks = Stock::with(['product', 'brand', 'vendor', 'sales'])
+            ->whereHas('sales', function($query) use($id){
+                $query->where('get_sale_id', $id);
+            });
+        return DataTables::eloquent($stocks)
+            ->addColumn('detachButton', function($stock) {
+                return view('stocks.partials.detachButton', ['stock' => $stock]);
+            })
+            ->make(true);
     }
 }

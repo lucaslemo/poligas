@@ -37,12 +37,14 @@ Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function 
     // Sales
     Route::get('/sales/load', [SaleController::class, 'loadDataTable'])->name('sales.load');
     Route::get('/sales/{filter}/loadCard', [SaleController::class, 'loadCard'])->name('sales.loadCard');
-    Route::get('/sales/{filter}/{chartType}', [SaleController::class, 'loadChart'])->name('sales.loadChart');
+    Route::get('/sales/{filter}/{chartType}/charts', [SaleController::class, 'loadChart'])->name('sales.loadChart');
+    Route::put('/sales/{id}/assignStocks', [SaleController::class, 'assignStocks'])->name('sales.assignStocks');
     Route::resource('/sales', SaleController::class);
 
     // Stocks
     Route::get('/stocks/load', [StockController::class, 'loadDataTable'])->name('stocks.load');
     Route::get('/stocks/productStocks/{product}', [StockController::class, 'infoProductStocks'])->name('stocks.productStocks');
+    Route::put('/stocks/{id}/unassignSale', [StockController::class, 'unassignSale'])->name('stocks.unassignSale');
     Route::resource('/stocks', StockController::class)->except(['edit', 'update']);
 
     // Vendors
@@ -70,6 +72,8 @@ Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function 
 
     // Customer
     Route::get('/customers/load/{type?}', [CustomerController::class, 'loadDataTable'])->name('customers.load');
+    Route::get('/customers/getCustomers', [CustomerController::class, 'getCustomers'])->name('customers.getCustomers');
+    Route::get('/customers/{id}/getCustomer', [CustomerController::class, 'getCustomer'])->name('customers.getCustomer');
     Route::resource('/customers', CustomerController::class)->except(['show', 'destroy']);
 
     // User
@@ -85,6 +89,7 @@ Route::group(['middleware' => ['auth', 'role:Administrador']], function () {
 
     // User
     Route::get('/users/getUsers/{role?}', [UserController::class, 'getUsers'])->name('users.getUsers');
+    Route::get('/users/{id}/getUser', [UserController::class, 'getUser'])->name('users.getUser');
     Route::put('/users/{id}/activate', [UserController::class, 'activateUser'])->name('users.activate');
     Route::put('/users/{id}/deactivate', [UserController::class, 'deactivateUser'])->name('users.deactivate');
     Route::put('/users/{id}/assignDeliveryman', [UserController::class, 'assignDeliveryman'])->name('users.assignDeliveryman');

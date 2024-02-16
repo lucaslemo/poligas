@@ -225,6 +225,8 @@ return [
         'get_product_id' => 'produto',
         'get_brand_id' => 'marca',
         'get_vendor_id' => 'fornecedor',
+        'get_customer_id' => 'cliente',
+        'get_user_id' => 'vendedor',
         'quantity' => 'quantidade',
         'vendor_value' => 'valor unitário',
         'value' => 'valor',

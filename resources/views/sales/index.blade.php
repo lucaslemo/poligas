@@ -46,85 +46,96 @@
         </section>
     </main>
     @push('scripts')
-    <script type="text/javascript">
-        $(document).ready(function() {
-            const routeSalesDataTable = "{{ route('sales.load') }}";
-            const tableSales = $('#salesDataTable').DataTable({
-                searching: true,
-                responsive: true,
-                "pageLength": 10,
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    url: routeSalesDataTable,
-                },
-                "columns": [
-                    {
-                        data: 'id',
-                        name: 'id',
-                    },
-                    {
-                        data: 'customer.name',
-                        name: 'customer.name',
-                    },
-                    {
-                        data: 'user.first_name',
-                        name: 'user.first_name',
-                        render: function(data, type, full, meta) {
-                            return `${data} ${full.user.last_name}`;
+        <script type="text/javascript">
+            $(document).ready(function() {
+                const routeSalesDataTable = "{{ route('sales.load') }}";
+                const tableSales = $('#salesDataTable').DataTable({
+                    searching: true,
+                    responsive: true,
+                    "pageLength": 10,
+                    "processing": true,
+                    "serverSide": true,
+                    "ajax": {
+                        url: routeSalesDataTable,
+                        data: function(d) {
+                            d.user_id = "{{ auth()->user()->type == 'Administrador' ? null : auth()->user()->id }}";
                         }
                     },
-                    {
-                        data: 'deliveryman.first_name',
-                        name: 'deliveryman.first_name',
-                        render: function(data, type, full, meta) {
-                            return data ? `${data} ${full.user.last_name}` : '-';
-                        }
+                    "columns": [
+                        {
+                            data: 'id',
+                            name: 'id',
+                        },
+                        {
+                            data: 'customer.name',
+                            name: 'customer.name',
+                            render: function(data, type, full, meta) {
+                                if (full.status == 'opened') {
+                                    return `<a href="${full.routeEdit}">${data}</a>`;
+                                }
+                                return `<a href="${full.routeShow}">${data}</a>`;
+                            }
+                        },
+                        {
+                            data: 'user.first_name',
+                            name: 'user.first_name',
+                            render: function(data, type, full, meta) {
+                                return `${data} ${full.user.last_name}`;
+                            }
+                        },
+                        {
+                            data: 'deliveryman.first_name',
+                            name: 'deliveryman.first_name',
+                            render: function(data, type, full, meta) {
+                                return data ? `${data} ${full.user.last_name}` : '-';
+                            }
+                        },
+                        {
+                            data: 'total_value',
+                            name: 'total_value',
+                            render: function(data, type, full, meta) {
+                                if (full.status == 'closed') {
+                                    return formatMoney(data);
+                                }
+                                return 'A consolidar'
+                            }
+                        },
+                        {
+                            data: 'payment_type.name',
+                            name: 'paymentType.name',
+                            render: function(data, type, full, meta) {
+                                return data || '-';
+                            }
+                        },
+                        {
+                            data: 'created_at',
+                            name: 'created_at',
+                            orderable: false,
+                            searchable: false,
+                            render: function(data, type, full, meta) {
+                                var created_at = new Date(data);
+                                var formatted_date = formatDateForDatatable(created_at);
+                                return `<small class="text-secondary">registrado em: <span class="fw-bold">${formatted_date}</span></small>`;
+                            }
+                        },
+                    ],
+                    "language": {
+                        "paginate": {
+                            "next": "Próxima",
+                            "previous": "Anterior"
+                        },
+                        "search": "Buscar",
+                        "info": "Mostrando de _START_ a _END_ de _TOTAL_ vendas",
+                        "infoEmpty": "Não há registros disponíveis",
+                        "infoFiltered": "(Filtrados de _MAX_ vendas)",
+                        "lengthMenu": "Mostrar _MENU_ vendas",
+                        "infoThousands": ".",
+                        "emptyTable": "Nenhum registro encontrado",
+                        "zeroRecords": "Nenhum registro correspondente encontrado",
+                        "loadingRecords": "Carregando...",
                     },
-                    {
-                        data: 'total_value',
-                        name: 'total_value',
-                        render: function(data, type, full, meta) {
-                            return formatMoney(data);
-                        }
-                    },
-                    {
-                        data: 'payment_type.name',
-                        name: 'paymentType.name',
-                        render: function(data, type, full, meta) {
-                            return data || '-';
-                        }
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at',
-                        orderable: false,
-                        searchable: false,
-                        render: function(data, type, full, meta) {
-                            console.log(full)
-                            var created_at = new Date(data);
-                            var formatted_date = formatDateForDatatable(created_at);
-                            return `<small class="text-secondary">registrado em: <span class="fw-bold">${formatted_date}</span></small>`;
-                        }
-                    },
-                ],
-                "language": {
-                    "paginate": {
-                        "next": "Próxima",
-                        "previous": "Anterior"
-                    },
-                    "search": "Buscar",
-                    "info": "Mostrando de _START_ a _END_ de _TOTAL_ vendas",
-                    "infoEmpty": "Não há registros disponíveis",
-                    "infoFiltered": "(Filtrados de _MAX_ vendas)",
-                    "lengthMenu": "Mostrar _MENU_ vendas",
-                    "infoThousands": ".",
-                    "emptyTable": "Nenhum registro encontrado",
-                    "zeroRecords": "Nenhum registro correspondente encontrado",
-                    "loadingRecords": "Carregando...",
-                },
+                });
             });
-        });
-    </script>
+        </script>
     @endpush
 </x-app>

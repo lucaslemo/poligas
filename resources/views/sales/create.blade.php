@@ -25,28 +25,31 @@
                                 accept-charset="utf-8" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row mb-3">
-                                    <label for="productSelect" class="col-sm-2 col-form-label">Produto em
-                                        estoque</label>
+                                    <label for="productSelect" class="col-sm-2 col-form-label">
+                                        Cliente
+                                    </label>
                                     <div class="col-sm-10">
-                                        <select id="productSelect" data-old-value="{{ old('get_product_id') }}"
-                                            class="form-select select2" name="get_product_id"></select>
-                                        <small id="labelProductInStocks" style="display: none">
-                                            <i class="bi bi-info-circle text-secondary"></i>
-                                            <span id="infoProductStocks"></span>
-                                        </small>
+                                        <select id="customerSelect" data-old-value="{{ old('get_customer_id') }}"
+                                            class="form-select select2" name="get_customer_id"></select>
                                     </div>
                                 </div>
-                                <div class="row mb-3 " id="first_hidden_layer" style="display: none">
-                                    <label for="brandSelect" class="col-sm-2 col-form-label">Marca</label>
-                                    <div class="col-sm-10">
-                                        <select id="brandSelect" data-old-value="{{ old('get_brand_id') }}"
-                                            class="form-select select2" name="get_brand_id"></select>
+                                @hasrole('Administrador')
+                                    <div class="row mb-3">
+                                        <label for="productSelect" class="col-sm-2 col-form-label">
+                                            Vendedor
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <select id="userSelect" data-old-value="{{ old('get_user_id') ?? auth()->user()->id }}"
+                                                class="form-select select2" name="get_user_id"></select>
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    <input type="hidden" value="{{ auth()->user()->id }}" name="get_user_id">
+                                @endhasrole
                                 <div class="text-center">
                                     <x-forms.button-with-spinner id="createSale" type="submit"
                                         class="btn btn-primary w-20" formId="createSaleForm">
-                                        Cadastrar
+                                        Iniciar venda
                                     </x-forms.button-with-spinner>
                                 </div>
                             </form>
@@ -60,8 +63,9 @@
     @push('scripts')
         <script type="text/javascript">
             $(document).ready(function() {
-                const routeProducts = "{{ route('products.getProducts') }}";
-                const selectProducts = $("#productSelect").select2({
+
+                const routeCustomers = "{{ route('customers.getCustomers') }}";
+                const selectCustomers = $("#customerSelect").select2({
                     placeholder: 'Selecione...',
                     theme: "bootstrap-5",
                     escapeMarkup: function(markup) {
@@ -69,7 +73,7 @@
                     },
                     language: {
                         noResults: function() {
-                            return `Nenhum registro encontrado. <a href="{{ route('stocks.create') }}">Cadastrar</a>`;
+                            return `Nenhum registro encontrado. <a href="{{ route('customers.create') }}">Cadastrar</a>`;
                         }
                     },
                     allowClear: true,
@@ -77,27 +81,29 @@
                     width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' :
                         'style',
                     ajax: {
-                        url: routeProducts,
+                        url: routeCustomers,
                         dataType: 'json',
                         delay: 250,
                         data: function(params) {
                             return {
                                 term: params.term || '',
                                 page: params.page || 1,
-                                filter: 'stocked',
                             }
                         },
                         cache: true
                     }
                 });
 
-                const routeBrands = "{{ route('brands.getBrands') }}";
-                const selectBrands = $("#brandSelect").select2({
+                const routeUsers = "{{ route('users.getUsers') }}";
+                const selectUsers = $("#userSelect").select2({
                     placeholder: 'Selecione...',
                     theme: "bootstrap-5",
+                    escapeMarkup: function(markup) {
+                        return markup;
+                    },
                     language: {
                         noResults: function() {
-                            return `Nenhum registro encontrado.`;
+                            return `Nenhum registro encontrado. <a href="{{ route('users.create') }}">Cadastrar</a>`;
                         }
                     },
                     allowClear: true,
@@ -105,44 +111,29 @@
                     width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' :
                         'style',
                     ajax: {
-                        url: routeBrands,
+                        url: routeUsers,
                         dataType: 'json',
                         delay: 250,
                         data: function(params) {
                             return {
                                 term: params.term || '',
                                 page: params.page || 1,
-                                filter: 'stocked',
-                                product_id: $("#productSelect").val(),
+                                roles: 'Administrador|Gerente'
                             }
                         },
                         cache: true
                     }
                 });
 
-                $("#productSelect").on('change', function() {
-                    const product = $(this).select2('data')[0].text;
-                    const route = "{{ route('stocks.productStocks', ':product') }}".replace(':product',
-                        product);
-                    $.get(route, function(response) {
-                        const stocks = response.stocks == 1 ? `${response.stocks} produto` :
-                            `${response.stocks} produtos`;
-                        const brands = response.brands == 1 ? `${response.brands} marca` :
-                            `${response.brands} marcas`;
-                        const vendors = response.vendors == 1 ? `${response.vendors} fornecedor` :
-                            `${response.vendors} fornecedores`;
-                        console.log(response)
-                        $('#infoProductStocks').html(
-                            `Existem ${stocks}, de ${brands} e ${vendors} fornecedores diferentes.`
-                        );
-                        $('#labelProductInStocks').show();
-                        $('#first_hidden_layer').slideDown();
+                const oldUser = $("#userSelect").data('old-value');
+                if (oldUser != '' && oldUser != null) {
+                    const routeUser = "{{ route('users.getUser', ':id') }}".replace(':id', oldUser);
+                    $.get(routeUser, function(response) {
+                        const name = `${response.first_name} ${response.last_name}`;
+                        const option = new Option(name, response.id, true, true);
+                        $("#userSelect").append(option).trigger('change');
                     });
-                });
-
-                $("#brandSelect").on('change', function() {
-                    
-                });
+                }
             });
         </script>
     @endpush

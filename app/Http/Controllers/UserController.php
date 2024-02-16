@@ -76,10 +76,14 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             $term = trim($request->term);
+            $filterRoles = $request->roles ? explode('|', trim($request->roles)) : null;
             $users = User::select('id',  DB::raw("CONCAT(first_name, ' ', last_name) AS text"))
                 ->where(function($query) use($term) {
                     $sql = "CONCAT(users.first_name,' ',users.last_name) like ?";
                     $query->whereRaw($sql, ["%{$term}%"]);
+                })
+                ->when($filterRoles, function($query) use($filterRoles){
+                    $query->whereIn('type', $filterRoles);
                 })
                 ->when($role, function($query) use($role) {
                     $query->where('type', $role);
@@ -95,6 +99,17 @@ class UserController extends Controller
                 "pagination" => ["more" => $morePages]
             );
             return Response::json($results);
+        }
+    }
+
+    /**
+     * Get record by id.
+     */
+    public function getUser(Request $request, string $id)
+    {
+        if ($request->ajax()) {
+            $user = User::findOrFail($id);
+            return Response::json($user);
         }
     }
 

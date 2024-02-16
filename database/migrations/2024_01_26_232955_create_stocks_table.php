@@ -26,8 +26,6 @@ return new class extends Migration
             $table->unsignedBigInteger('get_vendor_id');
             $table->foreign('get_vendor_id')->references('id')->on('vendors')->onDelete('cascade');
 
-            // $table->unique(['get_product_id', 'get_brand_id']);
-
             $table->timestamps();
         });
     }

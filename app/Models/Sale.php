@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Ramsey\Uuid\Uuid;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sale extends Model
 {
@@ -19,6 +19,7 @@ class Sale extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'uuid',
         'total_value',
         'payment_date',
         'get_customer_id',
@@ -26,6 +27,15 @@ class Sale extends Model
         'get_deliveryman_user_id',
         'get_payment_type_id',
     ];
+
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function($sale) {
+            $sale->uuid = (string) Uuid::uuid4();
+        });
+    }
 
     /**
      * Log all attributes on the model

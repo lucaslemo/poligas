@@ -97,7 +97,7 @@ class AddressController extends Controller
      */
     public function show(string $id)
     {
-        //
+        dd('show.address');
     }
 
     /**
@@ -139,7 +139,7 @@ class AddressController extends Controller
         $vendorId = $address->get_vendor_id;
         try {
             DB::beginTransaction();
-            
+
             $address->delete();
 
             DB::commit();

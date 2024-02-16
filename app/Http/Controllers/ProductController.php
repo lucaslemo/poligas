@@ -111,7 +111,7 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        dd('show.product');
     }
 
     /**
@@ -148,6 +148,6 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        dd('destroy.product');
     }
 }

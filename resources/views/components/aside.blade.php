@@ -11,7 +11,8 @@
 
         @hasanyrole('Administrador|Gerente')
             {{-- Nav vendas --}}
-            <x-nav.aside-item title="Vendas" uniqueId="sale-nav" parentId="sidebar-nav" icon="bi bi-cart"
+            <x-nav.aside-item title="{{auth()->user()->type == 'Administrador' ? 'Vendas' : 'Minhas Vendas'}}" uniqueId="sale-nav"
+                parentId="sidebar-nav" icon="bi bi-cart"
                 activeRoutes="{{ 'sales.*,prices.*' }}">
                 @can('Listar vendas')
                     <x-nav.aside-sub-item title="Listar" url="{{ route('sales.index') }}"

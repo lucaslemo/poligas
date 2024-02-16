@@ -21,8 +21,6 @@ class SaleSeeder extends Seeder
     {
         DB::table('sales')->delete();
 
-
-
         try {
             DB::beginTransaction();
 
@@ -51,6 +49,7 @@ class SaleSeeder extends Seeder
 
                 // Cria venda
                 $sale = new Sale();
+                $sale->status = 'closed';
                 $sale->total_value = 0;
                 $sale->payment_date = $paymentDate;
                 $sale->get_customer_id = $customer->id;

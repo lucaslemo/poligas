@@ -121,7 +121,7 @@ class VendorController extends Controller
      */
     public function show(string $id)
     {
-        //
+        dd('show.vendor');
     }
 
     /**
@@ -158,6 +158,6 @@ class VendorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        dd('destroy.vendor');
     }
 }

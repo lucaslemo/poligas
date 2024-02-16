@@ -56,11 +56,11 @@ class SaleController extends Controller
             $dates = json_decode(getDatesFilter($filter));
             $current = Sale::whereDate('created_at', '>=', $dates->current->start)
                 ->whereDate('created_at', '<=', $dates->current->finish)
-                ->where('status', 'sold')
+                ->where('status', 'closed')
                 ->count();
             $previous = Sale::whereDate('created_at', '>=', $dates->previous->start)
                 ->whereDate('created_at', '<=', $dates->previous->finish)
-                ->where('status', 'sold')
+                ->where('status', 'closed')
                 ->count();
             $results = [
                 'total' => $current,
@@ -223,7 +223,7 @@ class SaleController extends Controller
             $dates = json_decode(getDatesFilter($filter));
             $sales = Sale::whereDate('created_at', '>=', $dates->current->start)
                 ->whereDate('created_at', '<=', $dates->current->finish)
-                ->where('status', 'sold')
+                ->where('status', 'closed')
                 ->orderBy('created_at')->get();
             $data = [];
             $series = [];
@@ -278,7 +278,7 @@ class SaleController extends Controller
                 ->leftJoin('payment_types', 'sales.get_payment_type_id', '=', 'payment_types.id')
                 ->whereDate('sales.created_at', '>=', $dates->current->start)
                 ->whereDate('sales.created_at', '<=', $dates->current->finish)
-                ->where('status', 'sold')
+                ->where('status', 'closed')
                 ->groupBy('name')
                 ->get();
 

@@ -70,10 +70,10 @@
                             data: 'customer.name',
                             name: 'customer.name',
                             render: function(data, type, full, meta) {
-                                if (full.status == 'opened') {
-                                    return `<a href="${full.routeEdit}">${data}</a>`;
+                                if (full.payment_type) {
+                                    return `<a href="${full.routeShow}">${data}</a>`;
                                 }
-                                return `<a href="${full.routeShow}">${data}</a>`;
+                                return `<a href="${full.routeEdit}">${data}</a>`;
                             }
                         },
                         {
@@ -87,7 +87,7 @@
                             data: 'deliveryman.first_name',
                             name: 'deliveryman.first_name',
                             render: function(data, type, full, meta) {
-                                return data ? `${data} ${full.user.last_name}` : '-';
+                                return data ? `${data} ${full.deliveryman.last_name}` : '-';
                             }
                         },
                         {

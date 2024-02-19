@@ -26,12 +26,12 @@ class UserController extends Controller
                 : null;
 
             $users = User::select()
-                ->when($role, function($query) use($role) {
+                ->when($role, function ($query) use ($role) {
                     $query->where('type', $role);
                 })
-                ->when($id, function($query) use($id){
+                ->when($id, function ($query) use ($id) {
                     $query->with('managers');
-                    $query->whereHas('managers', function($query) use($id){
+                    $query->whereHas('managers', function ($query) use ($id) {
                         $query->where('get_manager_user_id', $id);
                     });
                 });
@@ -48,20 +48,20 @@ class UserController extends Controller
                 ->addColumn('detachButton', function ($user) {
                     return view('users.partials.detachButton', ['user' => $user]);
                 })
-                ->addColumn('assign_at', function ($user) use($id) {
+                ->addColumn('assign_at', function ($user) use ($id) {
                     try {
-                        return $user->managers->first(function($manger) use($id) {
+                        return $user->managers->first(function ($manger) use ($id) {
                             return $manger->id == $id;
                         })->pivot->created_at;
                     } catch (\Throwable $th) {
                         return null;
                     }
                 })
-                ->filterColumn('full_name', function($query, $keyword) {
+                ->filterColumn('full_name', function ($query, $keyword) {
                     $sql = "CONCAT(users.first_name,' ',users.last_name) like ?";
                     $query->whereRaw($sql, ["%{$keyword}%"]);
                 })
-                ->orderColumn('full_name', function($query, $order) {
+                ->orderColumn('full_name', function ($query, $order) {
                     $query->orderBy('first_name', $order);
                     $query->orderBy('last_name', $order);
                 })
@@ -75,18 +75,24 @@ class UserController extends Controller
     public function getUsers(Request $request, string|null $role = null)
     {
         if ($request->ajax()) {
-            $term = trim($request->term);
+            $term = $request->term ? trim($request->term) : null;
+            $managerId = $request->manager_id ? trim($request->manager_id) : null;
             $filterRoles = $request->roles ? explode('|', trim($request->roles)) : null;
             $users = User::select('id',  DB::raw("CONCAT(first_name, ' ', last_name) AS text"))
-                ->where(function($query) use($term) {
+                ->where(function ($query) use ($term) {
                     $sql = "CONCAT(users.first_name,' ',users.last_name) like ?";
                     $query->whereRaw($sql, ["%{$term}%"]);
                 })
-                ->when($filterRoles, function($query) use($filterRoles){
+                ->when($filterRoles, function ($query) use ($filterRoles) {
                     $query->whereIn('type', $filterRoles);
                 })
-                ->when($role, function($query) use($role) {
+                ->when($role, function ($query) use ($role) {
                     $query->where('type', $role);
+                })
+                ->when($managerId, function ($query) use ($managerId) {
+                    $query->whereHas('managers', function ($query) use ($managerId) {
+                        $query->where('get_manager_user_id', $managerId);
+                    });
                 })
                 ->orderBy('first_name', 'asc')
                 ->simplePaginate(10);
@@ -197,7 +203,7 @@ class UserController extends Controller
      */
     public function activateUser(Request $request, string $id)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             try {
                 DB::beginTransaction();
                 $user = User::findOrFail($id);
@@ -217,7 +223,7 @@ class UserController extends Controller
      */
     public function deactivateUser(Request $request, string $id)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             try {
                 DB::beginTransaction();
                 $user = User::findOrFail($id);
@@ -242,7 +248,7 @@ class UserController extends Controller
      */
     public function assignDeliveryman(Request $request, string $id)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             try {
                 $request->validate([
                     'deliveryman_id' => ['required', 'numeric']
@@ -267,7 +273,7 @@ class UserController extends Controller
      */
     public function unassignDeliveryman(Request $request, string $id)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             try {
                 $request->validate([
                     'deliveryman_id' => ['required', 'numeric']
@@ -286,5 +292,4 @@ class UserController extends Controller
             }
         }
     }
-
 }

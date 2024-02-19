@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SaleHasStocksRequest;
-use App\Http\Requests\saleRequest;
+use App\Http\Requests\SaleRequest;
 use App\Models\Sale;
 use App\Models\Stock;
 use Carbon\Carbon;
@@ -105,15 +105,18 @@ class SaleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(saleRequest $request)
+    public function store(SaleRequest $request)
     {
         try {
+            DB::beginTransaction();
             $sale = new Sale();
             $sale->fill($request->validated());
             $sale->save();
 
+            DB::commit();
             return Redirect::route('sales.edit', $sale->id)->with('status', 'Venda iniciada com sucesso.');
         } catch (\Throwable $th) {
+            DB::rollback();
             return Redirect::route('sales.create')->withErrors($th->getMessage());
         }
     }
@@ -123,7 +126,8 @@ class SaleController extends Controller
      */
     public function show(string $id)
     {
-        dd('show.sale');
+        $sale = Sale::with(['customer', 'user', 'deliveryman', 'paymentType'])->findOrFail($id);
+        return view('sales.show', compact('sale'));
     }
 
     /**
@@ -132,35 +136,80 @@ class SaleController extends Controller
     public function edit(string $id)
     {
         $sale = Sale::findOrFail($id);
-        if ($sale->status == 'opened') {
-            return view('sales.edit', compact('sale'));
+        if (auth()->user()->type != 'Administrador' && $sale->get_user_id != auth()->user()->id) {
+            return Redirect::route('sales.index')->withErrors('Essa venda não pertence ao seu usuário');
         }
-        return Redirect::route('sales.index')->withErrors('Essa venda já foi consolidada');
+        return view('sales.edit', compact('sale'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(saleRequest $request, string $id)
+    public function update(SaleRequest $request, string $id)
     {
         try {
+            DB::beginTransaction();
             $sale = Sale::with('stocks')->findOrFail($id);
             if ($sale->status == 'closed') {
                 throw new \Exception('Essa venda já foi consolidada');
+            }
+            if ($sale->get_payment_type_id) {
+                throw new \Exception('Essa venda já foi finalizada');
             }
 
             $sale->fill($request->validated());
             $sale->status = 'closed';
             $sale->save();
 
-            foreach($sale->stocks as $stock) {
+            foreach ($sale->stocks as $stock) {
                 $stock->status = 'sold';
                 $stock->save();
             }
 
-
-            return Redirect::route('sales.show', $sale->id)->with('status', 'Venda consolidada com sucesso.');
+            DB::commit();
+            return Redirect::route('sales.edit', $sale->id)->with('status', 'Venda consolidada com sucesso.');
         } catch (\Throwable $th) {
+            DB::rollback();
+            return Redirect::route('sales.index')->withErrors($th->getMessage());
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function updateFinishSale(Request $request, string $id)
+    {
+        try {
+
+            $request->validate([
+                'get_deliveryman_user_id' => ['nullable', 'numeric'],
+                'get_payment_type_id' => ['nullable', 'numeric'],
+            ]);
+
+            DB::beginTransaction();
+            $sale = Sale::findOrFail($id);
+            if ($sale->status == 'opened') {
+                throw new \Exception('Essa venda ainda não foi consolidada');
+            }
+            if ($sale->get_payment_type_id) {
+                throw new \Exception('Essa venda já foi finalizada');
+            }
+
+            $sale->get_deliveryman_user_id = $request->get_deliveryman_user_id;
+            $sale->get_payment_type_id = $request->get_payment_type_id;
+            if ($request->get_payment_type_id) {
+                $sale->payment_date = Carbon::now();
+            }
+            $sale->save();
+
+            DB::commit();
+
+            if ($request->get_payment_type_id) {
+                return Redirect::route('sales.show', $sale->id)->with('status', 'Venda finalizada com sucesso.');
+            }
+            return Redirect::route('sales.edit', $sale->id)->with('status', 'Venda atualizada com sucesso.');
+        } catch (\Throwable $th) {
+            DB::rollback();
             return Redirect::route('sales.index')->withErrors($th->getMessage());
         }
     }
@@ -182,6 +231,9 @@ class SaleController extends Controller
             try {
                 DB::beginTransaction();
                 $sale = Sale::findOrFail($id);
+                if ($sale->status == 'closed') {
+                    throw new \Exception('Essa venda já foi consolidada');
+                }
 
                 $stocks = Stock::where('status', 'available')
                     ->where('get_product_id', $request->get_product_id)
@@ -257,7 +309,6 @@ class SaleController extends Controller
 
             return Response::json(['series' => $series, 'categories' => $categories, 'label' => $label]);
         } catch (\Throwable $th) {
-            DB::rollback();
             return Response::json(['error' => $th->getMessage()], 500);
         }
     }
@@ -288,7 +339,6 @@ class SaleController extends Controller
 
             return Response::json($sales);
         } catch (\Throwable $th) {
-            DB::rollback();
             return Response::json(['error' => $th->getMessage()], 500);
         }
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\ACL\PermissionController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\PriceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
@@ -30,6 +31,10 @@ Route::get('/', function () {
 
 // Grupo de rotas para administradores e gerentes
 Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function () {
+    // Tipos de pagamento
+    Route::get('/paymentTypes/getPaymentTypes', [PaymentTypeController::class, 'getPaymentTypes'])->name('paymentTypes.getPaymentTypes');
+    Route::get('/paymentTypes/{id}/getPaymentType', [PaymentTypeController::class, 'getPaymentType'])->name('paymentTypes.getPaymentType');
+
     // Vendas
     Route::get('/prices/load', [PriceController::class, 'loadDataTable'])->name('prices.load');
     Route::resource('/prices', PriceController::class);
@@ -39,6 +44,7 @@ Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function 
     Route::get('/sales/{filter}/loadCard', [SaleController::class, 'loadCard'])->name('sales.loadCard');
     Route::get('/sales/{filter}/{chartType}/charts', [SaleController::class, 'loadChart'])->name('sales.loadChart');
     Route::put('/sales/{id}/assignStocks', [SaleController::class, 'assignStocks'])->name('sales.assignStocks');
+    Route::put('/sales/{id}/updateFinishSale', [SaleController::class, 'updateFinishSale'])->name('sales.updateFinishSale');
     Route::resource('/sales', SaleController::class);
 
     // Stocks
@@ -79,6 +85,8 @@ Route::group(['middleware' => ['auth', 'role:Administrador|Gerente']], function 
     // User
     Route::get('/users/load/{role?}', [UserController::class, 'loadDataTable'])->name('users.load');
     Route::get('/users/deliveryMen', [UserController::class, 'deliveryMenIndex'])->name('users.deliveryMen');
+    Route::get('/users/getUsers/{role?}', [UserController::class, 'getUsers'])->name('users.getUsers');
+    Route::get('/users/{id}/getUser', [UserController::class, 'getUser'])->name('users.getUser');
 });
 
 // Grupo de rotas para administradores
@@ -88,8 +96,6 @@ Route::group(['middleware' => ['auth', 'role:Administrador']], function () {
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
 
     // User
-    Route::get('/users/getUsers/{role?}', [UserController::class, 'getUsers'])->name('users.getUsers');
-    Route::get('/users/{id}/getUser', [UserController::class, 'getUser'])->name('users.getUser');
     Route::put('/users/{id}/activate', [UserController::class, 'activateUser'])->name('users.activate');
     Route::put('/users/{id}/deactivate', [UserController::class, 'deactivateUser'])->name('users.deactivate');
     Route::put('/users/{id}/assignDeliveryman', [UserController::class, 'assignDeliveryman'])->name('users.assignDeliveryman');

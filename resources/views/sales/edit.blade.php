@@ -16,75 +16,183 @@
         </div>
         <x-alerts.messages />
         <section class="section">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Selecionar produtos</h5>
-                            <p class="mb-5">Indentificador da venda: <strong>{{ $sale->uuid }}</strong></p>
-                            <form id="editSaleForm" action="{{ route('sales.update', $sale->id) }}" class="row g-3"
-                                method="POST" accept-charset="utf-8" enctype="multipart/form-data">
-                                @csrf
-                                @method('PUT')
-                                <div class="row mb-3">
-                                    <label for="productSelect" class="col-sm-2 col-form-label">
-                                        Cliente
-                                    </label>
-                                    <div class="col-sm-10">
-                                        <select id="customerSelect" data-old-value="{{ $sale->get_customer_id }}"
-                                            class="form-select select2" name="get_customer_id"></select>
-                                    </div>
-                                </div>
-                                @hasrole('Administrador')
+            @if ($sale->status == 'opened')
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Selecionar produtos</h5>
+                                <p class="mb-5">Indentificador da venda: <strong>{{ $sale->uuid }}</strong></p>
+                                <form id="editSaleForm" action="{{ route('sales.update', $sale->id) }}" class="row g-3"
+                                    method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
                                     <div class="row mb-3">
-                                        <label for="productSelect" class="col-sm-2 col-form-label">
-                                            Vendedor
+                                        <label for="customerSelect" class="col-sm-2 col-form-label">
+                                            Cliente
                                         </label>
                                         <div class="col-sm-10">
-                                            <select id="userSelect" data-old-value="{{ $sale->get_user_id }}"
-                                                class="form-select select2" name="get_user_id"></select>
+                                            <select id="customerSelect" data-old-value="{{ $sale->get_customer_id }}"
+                                                class="form-select select2" name="get_customer_id"></select>
                                         </div>
                                     </div>
-                                @endhasrole
-                                <div class="row mb-3">
-                                    <label for="productSelect" class="col-sm-2 col-form-label">Produto em
-                                        estoque</label>
-                                    <div class="col-sm-10">
-                                        <select id="productSelect" data-old-value="{{ old('get_product_id') }}"
-                                            class="form-select select2" name="get_product_id"></select>
-                                        <small id="labelProductInStocks" style="display: none">
-                                            <i class="bi bi-info-circle text-secondary"></i>
-                                            <span id="infoProductStocks"></span>
-                                        </small>
-                                    </div>
-                                </div>
-                                <div id="first_hidden_layer" style="display: none">
-
+                                    @hasrole('Administrador')
+                                        <div class="row mb-3">
+                                            <label for="userSelect" class="col-sm-2 col-form-label">
+                                                Vendedor
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <select id="userSelect" data-old-value="{{ $sale->get_user_id }}"
+                                                    class="form-select select2" name="get_user_id"></select>
+                                            </div>
+                                        </div>
+                                    @endhasrole
                                     <div class="row mb-3">
-                                        <label for="valueInput" class="col-sm-2 col-form-label">Valor unitário</label>
+                                        <label for="productSelect" class="col-sm-2 col-form-label">Produto em
+                                            estoque</label>
+                                        <div class="col-sm-10">
+                                            <select id="productSelect" data-old-value="{{ old('get_product_id') }}"
+                                                class="form-select select2" name="get_product_id"></select>
+                                            <small id="labelProductInStocks" style="display: none">
+                                                <i class="bi bi-info-circle text-secondary"></i>
+                                                <span id="infoProductStocks"></span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div id="first_hidden_layer" style="display: none">
+
+                                        <div class="row mb-3">
+                                            <label for="valueInput" class="col-sm-2 col-form-label">Valor
+                                                unitário</label>
+                                            <div class="col-sm-10">
+                                                <div class="input-group">
+                                                    <span class="input-group-text" id="money-addon">R$</span>
+                                                    <input type="text" class="form-control money" id="valueInput"
+                                                        name="value">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <label for="quantityInput"
+                                                class="col-sm-2 col-form-label">Quantidade</label>
+                                            <div class="col-sm-10">
+                                                <input type="number" class="form-control" id="quantityInput"
+                                                    name="quantity">
+                                            </div>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <button id="attachStockButton" type="button"
+                                                class="btn btn-outline-primary w-20">
+                                                Atribuir produto
+                                            </button>
+                                        </div>
+
+                                        <p>Lista dos produtos dessa venda</p>
+
+                                        <table id="saleStocksDataTable" class="table table-sm" style="width: 100%;">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">#</th>
+                                                    <th scope="col">Produto</th>
+                                                    <th scope="col">Marca</th>
+                                                    <th scope="col">Fornecedor</th>
+                                                    <th scope="col">Valor de compra</th>
+                                                    <th scope="col">Valor de venda</th>
+                                                    <th scope="col">Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
+
+                                        <div id="second_hidden_layer" style="display: none">
+                                            <div class="text-center">
+                                                <x-forms.button-with-spinner id="editSale" type="submit"
+                                                    class="btn btn-primary w-20" formId="editSaleForm">
+                                                    Consolidar venda
+                                                </x-forms.button-with-spinner>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @if ($sale->status == 'closed')
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Finalizar compra</h5>
+                                <p class="mb-5">Indentificador da venda: <strong>{{ $sale->uuid }}</strong></p>
+                                <form id="editSaleForm" action="{{ route('sales.updateFinishSale', $sale->id) }}" class="row g-3"
+                                    method="POST" accept-charset="utf-8" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    <div class="row mb-3">
+                                        <label for="customerSelect" class="col-sm-2 col-form-label">
+                                            Cliente
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <select id="customerSelect" data-old-value="{{ $sale->get_customer_id }}"
+                                                class="form-select select2" disabled></select>
+                                        </div>
+                                    </div>
+                                    @hasrole('Administrador')
+                                        <div class="row mb-3">
+                                            <label for="userSelect" class="col-sm-2 col-form-label">
+                                                Vendedor
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <select id="userSelect" data-old-value="{{ $sale->get_user_id }}"
+                                                    class="form-select select2" disabled></select>
+                                            </div>
+                                        </div>
+                                    @endhasrole
+                                    <div class="row mb-3">
+                                        <label for="totalValue" class="col-sm-2 col-form-label">Valor da venda</label>
                                         <div class="col-sm-10">
                                             <div class="input-group">
                                                 <span class="input-group-text" id="money-addon">R$</span>
-                                                <input type="text" class="form-control money" id="valueInput" name="value">
+                                                <input type="text" class="form-control money" id="totalValue"
+                                                    value="{{ $sale->total_value }}" disabled>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row mb-3">
-                                        <label for="quantityInput" class="col-sm-2 col-form-label">Quantidade</label>
+                                        <label for="deliverymanSelect" class="col-sm-2 col-form-label">
+                                            Entregador
+                                        </label>
                                         <div class="col-sm-10">
-                                            <input type="number" class="form-control" id="quantityInput" name="quantity">
+                                            <select id="deliverymanSelect"
+                                                data-old-value="{{ $sale->get_deliveryman_user_id }}"
+                                                class="form-select select2" name="get_deliveryman_user_id"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="paymentTypeSelect" class="col-sm-2 col-form-label">
+                                            Tipo de pagamento
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <select id="paymentTypeSelect"
+                                                data-old-value="{{ $sale->get_payment_type_id }}"
+                                                class="form-select select2" name="get_payment_type_id"></select>
+                                            <small>
+                                                <i class="bi bi-info-circle text-secondary"></i>
+                                                <span>Quando o tipo de pagamento for adicionado a venda não poderá ser
+                                                    mais ser editada.</span>
+                                            </small>
                                         </div>
                                     </div>
 
-                                    <div class="text-center">
-                                        <button id="attachStockButton" type="button"
-                                            class="btn btn-outline-primary w-20">
-                                            Atribuir produto
-                                        </button>
-                                    </div>
-
-                                    <p>Lista dos produtos cadastrados no sistema</p>
+                                    <p>Lista dos produtos dessa venda</p>
 
                                     <table id="saleStocksDataTable" class="table table-sm" style="width: 100%;">
                                         <thead>
@@ -95,7 +203,6 @@
                                                 <th scope="col">Fornecedor</th>
                                                 <th scope="col">Valor de compra</th>
                                                 <th scope="col">Valor de venda</th>
-                                                <th scope="col">Ações</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -107,17 +214,19 @@
                                         <div class="text-center">
                                             <x-forms.button-with-spinner id="editSale" type="submit"
                                                 class="btn btn-primary w-20" formId="editSaleForm">
-                                                Consolidar venda
+                                                <span id="customLabelButton">
+                                                    Atualizar venda
+                                                </span>
                                             </x-forms.button-with-spinner>
                                         </div>
                                     </div>
 
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </section>
     </main>
 
@@ -140,7 +249,7 @@
                         },
                     },
                     "drawCallback": function(settings) {
-                        if($('#saleStocksDataTable').DataTable().data().count() == 0){
+                        if ($('#saleStocksDataTable').DataTable().data().count() == 0) {
                             $('#second_hidden_layer').hide()
                         } else {
                             $('#first_hidden_layer').show();
@@ -187,6 +296,7 @@
                             width: '1%',
                             orderable: false,
                             searchable: false,
+                            visible: {{ $sale->status == 'opened' ? 'true' : 'false' }},
                         },
                     ],
                     "language": {
@@ -195,10 +305,10 @@
                             "previous": "Anterior"
                         },
                         "search": "Buscar",
-                        "info": "Mostrando de _START_ a _END_ de _TOTAL_ produtos do estoque",
+                        "info": "Mostrando de _START_ a _END_ de _TOTAL_ produtos",
                         "infoEmpty": "Não há registros disponíveis",
-                        "infoFiltered": "(Filtrados de _MAX_ produtos do estoque)",
-                        "lengthMenu": "Mostrar _MENU_ produtos do estoque",
+                        "infoFiltered": "(Filtrados de _MAX_ produtos)",
+                        "lengthMenu": "Mostrar _MENU_ produtos",
                         "infoThousands": ".",
                         "emptyTable": "Nenhum registro encontrado",
                         "zeroRecords": "Nenhum registro correspondente encontrado",
@@ -316,6 +426,87 @@
                     }
                 });
 
+                const routeDeliveryman = "{{ route('users.getUsers', ['role' => 'Entregador']) }}";
+                const selectDeliveryman = $("#deliverymanSelect").select2({
+                    placeholder: 'Selecione...',
+                    theme: "bootstrap-5",
+                    escapeMarkup: function(markup) {
+                        return markup;
+                    },
+                    language: {
+                        noResults: function() {
+                            return 'Nenhum registro encontrado.';
+                        }
+                    },
+                    allowClear: true,
+                    multiple: false,
+                    width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' :
+                        'style',
+                    ajax: {
+                        url: routeDeliveryman,
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                term: params.term || '',
+                                page: params.page || 1,
+                                manager_id: $('#userSelect').val() || "{{ auth()->user()->id }}"
+                            }
+                        },
+                        cache: true
+                    }
+                });
+
+                const oldDeliveryman = $("#deliverymanSelect").data('old-value');
+                if (oldDeliveryman != '' && oldDeliveryman != null) {
+                    const routeUser = "{{ route('users.getUser', ':id') }}".replace(':id', oldDeliveryman);
+                    $.get(routeUser, function(response) {
+                        const name = `${response.first_name} ${response.last_name}`;
+                        const option = new Option(name, response.id, true, true);
+                        $("#deliverymanSelect").append(option).trigger('change');
+                    });
+                }
+
+                const routePaymentType = "{{ route('paymentTypes.getPaymentTypes') }}";
+                const selectPaymentType = $("#paymentTypeSelect").select2({
+                    placeholder: 'Selecione...',
+                    theme: "bootstrap-5",
+                    escapeMarkup: function(markup) {
+                        return markup;
+                    },
+                    language: {
+                        noResults: function() {
+                            return 'Nenhum registro encontrado.';
+                        }
+                    },
+                    allowClear: true,
+                    multiple: false,
+                    width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' :
+                        'style',
+                    ajax: {
+                        url: routePaymentType,
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                term: params.term || '',
+                                page: params.page || 1,
+                            }
+                        },
+                        cache: true
+                    }
+                });
+
+                const oldPaymentType = $("#paymentTypeSelect").data('old-value');
+                if (oldPaymentType != '' && oldPaymentType != null) {
+                    const routePaymentType = "{{ route('paymentTypes.getPaymentType', ':id') }}".replace(':id',
+                        oldPaymentType);
+                    $.get(routePaymentType, function(response) {
+                        const option = new Option(response.name, response.id, true, true);
+                        $("#paymentTypeSelect").append(option).trigger('change');
+                    });
+                }
+
                 $("#productSelect").on('change', function() {
                     if ($(this).val()) {
                         const product = $(this).select2('data')[0].text;
@@ -390,6 +581,14 @@
                             alert(xhr.responseJSON.error || xhr.responseJSON.message);
                         }
                     });
+                });
+
+                $('#paymentTypeSelect').on('change', function() {
+                    if($(this).val()) {
+                        $('#customLabelButton').html('Finalizar venda');
+                    } else {
+                        $('#customLabelButton').html('Atualizar venda');
+                    }
                 });
             });
         </script>

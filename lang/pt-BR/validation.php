@@ -227,6 +227,7 @@ return [
         'get_vendor_id' => 'fornecedor',
         'get_customer_id' => 'cliente',
         'get_user_id' => 'vendedor',
+        'get_deliveryman_user_id' => 'entregador',
         'quantity' => 'quantidade',
         'vendor_value' => 'valor unitário',
         'value' => 'valor',

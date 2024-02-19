@@ -149,8 +149,11 @@ class StockController extends Controller
 
                 DB::beginTransaction();
                 $stock = Stock::with('sales')->findOrFail($id);
-
                 $sale = Sale::findOrFail($request->sale_id);
+                if ($sale->status == 'closed') {
+                    throw new \Exception('Essa venda já foi consolidada');
+                }
+
                 $sale->total_value -= $stock->sales[0]->pivot->sale_value;
                 $sale->save();
 
